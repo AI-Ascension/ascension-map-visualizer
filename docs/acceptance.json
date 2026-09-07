@@ -79,9 +79,9 @@
     "provider_graph_image_input": "unverified",
     "settled_map_action": "unverified",
     "game_or_provider_launched": true,
-    "host_bootstrap_attempts": 2,
+    "host_bootstrap_attempts": 3,
     "first_attempt": "host exited before readiness because Steam was unavailable; zero provider calls and actions; cleanup baseline preserved",
-    "current_attempt": "terminal failure on first episode observation after host readiness; zero provider decisions and game actions; cause diagnosis pending",
+    "current_attempt": "No attempt running. Third attempt failed on first MCP observation request; cleanup and protected-data checks passed. Fourth launch withheld because Steam client is unavailable.",
     "steam_startup_issue": "https://github.com/AI-Ascension/sts2-game-mod/issues/56",
     "evidence": "docs/evidence/live-attempts.json"
   },
@@ -129,7 +129,8 @@
       "real_provider_delivery": false,
       "runtime_feed_publication": "implemented and source-reviewed; live unverified",
       "synthetic_cli_capture": "docs/evidence/provider-cli-capture.json",
-      "assembly_evidence": "docs/evidence/harness-assembly.json"
+      "assembly_evidence": "docs/evidence/harness-assembly.json",
+      "source_commit": "4e8c93a3b1fc7cb3ca5ddab3476c0290cf89f9eb"
     },
     "storage": {
       "status": "final_workspace_checks_passed_live_unverified",

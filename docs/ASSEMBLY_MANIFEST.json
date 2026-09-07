@@ -48,10 +48,10 @@
     },
     {
       "repository": "AI-Ascension/sts2-harness",
-      "commit": "c4574555bf383014479b5651b59e0f90c0a40715",
+      "commit": "4e8c93a3b1fc7cb3ca5ddab3476c0290cf89f9eb",
       "pull_request": "https://github.com/AI-Ascension/sts2-harness/pull/35",
       "pending_source_changes": false,
-      "evidence_scope": "Exact source pin passed full workspace checks, independent cache review and actual synthetic provider CLI capture; published draft PR; live failed on first observation before provider decision"
+      "evidence_scope": "Full workspace checks and independent diagnostic review passed; draft PR updated; three live attempts terminated before decisions; Steam is now unavailable"
     },
     {
       "repository": "AI-Ascension/ascension-map-visualizer",
@@ -86,7 +86,7 @@
   "merge_authorized": false,
   "release_authorized": false,
   "blockers": [
-    "First live observation failed before any provider decision; bounded diagnostic repair in progress.",
+    "Steam client is currently unavailable. Latest request diagnostics are source-validated but have not yet run against the disposable host.",
     "Real provider graph/image delivery and host-settled map action remain unverified.",
     "Native child delegation is unavailable; three descendant layers remain unverified."
   ],
@@ -112,6 +112,22 @@
       "source_commit": "5b1d196480685a313bc2417d5b4450a63cc89ce5",
       "binary": "map-visualizer",
       "sha256": "782d0d24d795a35335b84dcb8b08458af5e97eeca71b853914cc8b590ad1462f",
+      "platform": "linux-x86_64",
+      "live_verified": false
+    },
+    {
+      "owner": "AI-Ascension/sts2-harness",
+      "source_commit": "4e8c93a3b1fc7cb3ca5ddab3476c0290cf89f9eb",
+      "binary": "sts2-harness-runtime",
+      "sha256": "3ce38941077e3147cd7438f8ff7e41751ff916aff56f124712e7814f0e3426f3",
+      "platform": "linux-x86_64",
+      "live_verified": false
+    },
+    {
+      "owner": "AI-Ascension/sts2-harness",
+      "source_commit": "4e8c93a3b1fc7cb3ca5ddab3476c0290cf89f9eb",
+      "binary": "sts2-astra-bridge",
+      "sha256": "a4c42de77b49eac119021b08aeb1f5ade81c7d0c83f5979adf9ad797937c10f8",
       "platform": "linux-x86_64",
       "live_verified": false
     }

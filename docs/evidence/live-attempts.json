@@ -3,7 +3,6 @@
   "date": "2026-09-07",
   "status": "failed_before_provider_decision",
   "live_vertical_slice_verified": false,
-  "harness_source_commit": "c4574555bf383014479b5651b59e0f90c0a40715",
   "host_launcher_commit": "089a60dc9f6377cc38b23cfab3b12ad0a00aeef7",
   "attempts": [
     {
@@ -15,7 +14,8 @@
       "trajectory_created": false,
       "provider_decisions": 0,
       "game_actions": 0,
-      "cleanup_baseline": "preserved"
+      "cleanup_baseline": "preserved",
+      "harness_source_commit": "c4574555bf383014479b5651b59e0f90c0a40715"
     },
     {
       "sequence": 2,
@@ -27,17 +27,39 @@
       "trajectory_bytes": 0,
       "provider_decisions": 0,
       "game_actions": 0,
-      "cleanup_baseline": "preserved"
+      "cleanup_baseline": "preserved",
+      "harness_source_commit": "c4574555bf383014479b5651b59e0f90c0a40715"
+    },
+    {
+      "sequence": 3,
+      "terminal": true,
+      "host_launched": true,
+      "host_ready": true,
+      "reason": "First observation request failed; initial diagnostic still omitted the underlying transport category",
+      "diagnostic_code": "observe_failed",
+      "trajectory_created": true,
+      "trajectory_bytes": 0,
+      "provider_decisions": 0,
+      "game_actions": 0,
+      "cleanup_baseline": "preserved",
+      "harness_source_commit": "99ee3eac080ac03a186e0081505f131ea95d3a3c"
     }
   ],
-  "protected_data_check_after_both_attempts": {
+  "remaining_provider_decision_budget": 2,
+  "steam_preflight_issue": "https://github.com/AI-Ascension/sts2-game-mod/issues/56",
+  "limits": "Host startup evidence only. No native map snapshot, real provider graph/image delivery, or settled map action was verified. Private logs and machine paths are excluded.",
+  "latest_preflight": {
+    "host_launched": false,
+    "steam_process_present": false,
+    "active_user_ready": false,
+    "game_process_count": 0,
+    "reason": "Steam client unavailable; no fourth launch started"
+  },
+  "protected_data_check_after_latest_attempt": {
     "original_files": 683,
     "backup_files": 683,
     "mismatches": 0,
     "backup_mismatches": 0,
     "added_files": 0
-  },
-  "remaining_provider_decision_budget": 2,
-  "steam_preflight_issue": "https://github.com/AI-Ascension/sts2-game-mod/issues/56",
-  "limits": "Host startup evidence only. No native map snapshot, real provider graph/image delivery, or settled map action was verified. Private logs and machine paths are excluded."
+  }
 }

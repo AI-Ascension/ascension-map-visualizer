@@ -55,5 +55,25 @@
       "conclusion": "SUCCESS"
     }
   ],
-  "limits": "This source pin passed source and synthetic checks. Two subsequent disposable attempts failed before provider decisions or gameplay actions. Diagnostic repairs require their own source and binary pins."
+  "limits": "Source and synthetic checks passed. Three disposable attempts failed before provider decisions or game actions. The latest runtime diagnostic has not been launched because Steam is currently unavailable.",
+  "diagnostic_update": {
+    "source_commit": "4e8c93a3b1fc7cb3ca5ddab3476c0290cf89f9eb",
+    "source_validation": "Reviewed two-file request-diagnostic delta passed checks, then was committed without further source changes; current worktree clean",
+    "workspace_suites": 38,
+    "tests_passed": 257,
+    "tests_failed": 0,
+    "tests_ignored": 0,
+    "format_exit_code": 0,
+    "clippy_exit_code": 0,
+    "test_exit_code": 0,
+    "policy_exit_code": 0,
+    "policy_sized_files": 435,
+    "policy_warnings": 0,
+    "policy_errors": 0,
+    "build_exit_code": 0,
+    "independent_review": "accepted",
+    "runtime_sha256": "3ce38941077e3147cd7438f8ff7e41751ff916aff56f124712e7814f0e3426f3",
+    "bridge_sha256": "a4c42de77b49eac119021b08aeb1f5ade81c7d0c83f5979adf9ad797937c10f8",
+    "live_execution_of_latest_runtime": false
+  }
 }
