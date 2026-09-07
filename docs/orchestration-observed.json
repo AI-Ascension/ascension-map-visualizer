@@ -12,7 +12,7 @@
   },
   "accepted": {
     "explicit_spawn_settings": "gpt-5.6-luna / max",
-    "spawn_count": 8
+    "spawn_count": 11
   },
   "observed": [
     {
@@ -78,18 +78,47 @@
       "model": "gpt-5.6-luna",
       "reasoning_effort": "max",
       "metadata_source": "independent installed-client thread metadata"
+    },
+    {
+      "agent_path": "/root/integration_lead",
+      "parent": "root",
+      "depth": 1,
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "max",
+      "metadata_source": "independent installed-client thread metadata",
+      "phase": "resumed validation"
+    },
+    {
+      "agent_path": "/root/host_integration",
+      "parent": "root",
+      "depth": 1,
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "max",
+      "metadata_source": "independent installed-client thread metadata",
+      "phase": "resumed validation"
+    },
+    {
+      "agent_path": "/root/release_review",
+      "parent": "root",
+      "depth": 1,
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "max",
+      "metadata_source": "independent installed-client thread metadata",
+      "phase": "resumed validation"
     }
   ],
   "nesting": {
     "status": "blocked",
-    "reason": "Luna child tool surface exposes no delegation operation",
+    "reason": "Both original and resumed Luna child tool surfaces expose no delegation operation; no depth-two or depth-three workers were created.",
     "maximum_observed_descendant_depth": 1
   },
   "concurrency": {
     "project_ceiling": 12,
     "peak_observed_open_descendants": 8,
-    "reservation_registry": "private root-owned atomic ledger"
+    "reservation_registry": "private root-owned atomic ledger",
+    "current_open_descendants": 3,
+    "resumption": "Previous native registry contained no descendants before three new bounded tasks were assigned; unused nested reservations were cancelled after capability failure."
   },
-  "project_config": "supported keys parsed; project trust layer disabled for current session; no effective reload claimed",
+  "project_config": "Supported keys parsed; explicit spawn arguments independently observed. No effective project-config reload claimed.",
   "complete": false
 }

@@ -71,7 +71,7 @@
     {
       "requirement": "three genuine descendant layers",
       "status": "blocked",
-      "reason": "Child tool surface has no delegation operation; eight Luna/max descendants are observed at depth one."
+      "reason": "Original and resumed Luna child tool surfaces have no delegation operation; observed descendants are all depth one."
     }
   ],
   "live_status": {
@@ -79,5 +79,28 @@
     "provider_graph_image_input": "unverified",
     "settled_map_action": "unverified",
     "game_or_provider_launched": false
+  },
+  "component_evidence": {
+    "offline_product": {
+      "status": "validated",
+      "source_commit": "5b1d196480685a313bc2417d5b4450a63cc89ce5",
+      "rust_linux_passed": 31,
+      "rust_windows_passed": 29,
+      "browser_passed": 18,
+      "ci_run": "https://github.com/AI-Ascension/ascension-map-visualizer/actions/runs/34092979262",
+      "native_evidence": "docs/evidence/native-packaging.json",
+      "live_vertical_slice": false
+    },
+    "transport": {
+      "status": "component_checks_passed",
+      "protocol": "d9ffb190ad8990e15f43d7992581dcb2d60b1971",
+      "gateway": "4b306321f869f0dffb99110cc127dcdac731df4a",
+      "mcp": "0d2035a08cbab9210e89ee0c1adc560fcf47d327",
+      "integrated_host_settlement": false
+    },
+    "evaluation": {
+      "status": "repair_in_progress",
+      "reason": "Preliminary matrix used invented timings, oracle answers in context, and image metadata without PNG."
+    }
   }
 }
