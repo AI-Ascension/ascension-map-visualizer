@@ -130,7 +130,7 @@
       "runtime_feed_publication": "implemented and source-reviewed; live unverified",
       "synthetic_cli_capture": "docs/evidence/provider-cli-capture.json",
       "assembly_evidence": "docs/evidence/harness-assembly.json",
-      "source_commit": "4e8c93a3b1fc7cb3ca5ddab3476c0290cf89f9eb"
+      "source_commit": "423d9052c8780173e640fa5991e88e8bae282f47"
     },
     "storage": {
       "status": "final_workspace_checks_passed_live_unverified",
