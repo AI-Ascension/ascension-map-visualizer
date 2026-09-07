@@ -104,12 +104,14 @@
     },
     "host": {
       "status": "build_and_probe_checks_passed",
-      "code_commit": "31e905bd88c1f309cee1e29f142c4f729737fa6f",
-      "documentation_head": "64b8aed6bf50310b64353e032f618aa85a92e5bf",
+      "code_commit": "f62fedbc28eef4f15f4b41a0d45da5999edc0c84",
+      "documentation_head": "f62fedbc28eef4f15f4b41a0d45da5999edc0c84",
       "pull_request": "https://github.com/AI-Ascension/sts2-game-mod/pull/54",
-      "independent_delta_review": "prior identity/generation findings closed; incremental child bound and post-main integration validation pending",
+      "independent_delta_review": "Identity/generation findings and incremental child bound closed; root map probe passed at final source; final addon hashes independently checked",
       "disposable_addon_staged": true,
-      "live_host_map_verified": false
+      "live_host_map_verified": false,
+      "ci_run": "https://github.com/AI-Ascension/sts2-game-mod/actions/runs/34138231848",
+      "windows_workshop_probe": "blocked by unprivileged symlink creation; Linux owner probe passed"
     },
     "provider": {
       "status": "repair_in_progress",
