@@ -1,0 +1,43 @@
+{
+  "schema": "ascension-map-live-attempts-v1",
+  "date": "2026-09-07",
+  "status": "failed_before_provider_decision",
+  "live_vertical_slice_verified": false,
+  "harness_source_commit": "c4574555bf383014479b5651b59e0f90c0a40715",
+  "host_launcher_commit": "089a60dc9f6377cc38b23cfab3b12ad0a00aeef7",
+  "attempts": [
+    {
+      "sequence": 1,
+      "terminal": true,
+      "host_launched": true,
+      "host_ready": false,
+      "reason": "Steam client unavailable; host exited before readiness",
+      "trajectory_created": false,
+      "provider_decisions": 0,
+      "game_actions": 0,
+      "cleanup_baseline": "preserved"
+    },
+    {
+      "sequence": 2,
+      "terminal": true,
+      "host_launched": true,
+      "host_ready": true,
+      "reason": "First episode observation failed; precise cause not yet available",
+      "trajectory_created": true,
+      "trajectory_bytes": 0,
+      "provider_decisions": 0,
+      "game_actions": 0,
+      "cleanup_baseline": "preserved"
+    }
+  ],
+  "protected_data_check_after_both_attempts": {
+    "original_files": 683,
+    "backup_files": 683,
+    "mismatches": 0,
+    "backup_mismatches": 0,
+    "added_files": 0
+  },
+  "remaining_provider_decision_budget": 2,
+  "steam_preflight_issue": "https://github.com/AI-Ascension/sts2-game-mod/issues/56",
+  "limits": "Host startup evidence only. No native map snapshot, real provider graph/image delivery, or settled map action was verified. Private logs and machine paths are excluded."
+}

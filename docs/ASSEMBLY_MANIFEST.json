@@ -30,7 +30,7 @@
       "addon_source_commit": "f62fedbc28eef4f15f4b41a0d45da5999edc0c84",
       "pull_request": "https://github.com/AI-Ascension/sts2-game-mod/pull/54",
       "pending_source_changes": false,
-      "evidence_scope": "Addon source gates passed; staged addon hashes verified; launcher trace22 and strict policy passed, independent campaign review closed; latest hosted checks pending; live unverified"
+      "evidence_scope": "Addon source gates passed; staged addon hashes verified; launcher trace22 and strict policy passed, independent campaign review closed; all three hosted checks passed at exact launcher head; live unverified"
     },
     {
       "repository": "AI-Ascension/sts2-gateway",
@@ -48,17 +48,17 @@
     },
     {
       "repository": "AI-Ascension/sts2-harness",
-      "commit": "9a3a282f5616f09367c449d65b029484baac0509",
-      "pull_request": null,
-      "pending_source_changes": true,
-      "evidence_scope": "pending integration and evaluation repairs; not an assembly pin"
+      "commit": "c4574555bf383014479b5651b59e0f90c0a40715",
+      "pull_request": "https://github.com/AI-Ascension/sts2-harness/pull/35",
+      "pending_source_changes": false,
+      "evidence_scope": "Exact source pin passed full workspace checks, independent cache review and actual synthetic provider CLI capture; published draft PR; live failed on first observation before provider decision"
     },
     {
       "repository": "AI-Ascension/ascension-map-visualizer",
       "commit": "5b1d196480685a313bc2417d5b4450a63cc89ce5",
       "pull_request": "https://github.com/AI-Ascension/ascension-map-visualizer/pull/2",
       "pending_source_changes": false,
-      "evidence_scope": "native package source pin; subsequent documentation commit c29d8a8"
+      "evidence_scope": "native package source pin; subsequent documentation commits do not change package source"
     },
     {
       "repository": "AI-Ascension/ai-agent-observability",
@@ -86,8 +86,34 @@
   "merge_authorized": false,
   "release_authorized": false,
   "blockers": [
-    "Harness provider boundary and evaluation repairs are not yet committed and validated as one assembly.",
+    "First live observation failed before any provider decision; bounded diagnostic repair in progress.",
     "Real provider graph/image delivery and host-settled map action remain unverified.",
     "Native child delegation is unavailable; three descendant layers remain unverified."
+  ],
+  "prepared_executables": [
+    {
+      "owner": "AI-Ascension/sts2-gateway",
+      "source_commit": "4b306321f869f0dffb99110cc127dcdac731df4a",
+      "binary": "sts2-gateway-runtime",
+      "sha256": "2c4af20549d0e709dc4eccae443de4aec7605721d82047432192109f478176a5",
+      "platform": "linux-x86_64",
+      "live_verified": false
+    },
+    {
+      "owner": "AI-Ascension/sts2-mcp-server",
+      "source_commit": "0d2035a08cbab9210e89ee0c1adc560fcf47d327",
+      "binary": "sts2-mcp-server",
+      "sha256": "edd408799080a368ce9fe053aeaa380ec2401aeb565b8fa9436bdc119285e1f9",
+      "platform": "linux-x86_64",
+      "live_verified": false
+    },
+    {
+      "owner": "AI-Ascension/ascension-map-visualizer",
+      "source_commit": "5b1d196480685a313bc2417d5b4450a63cc89ce5",
+      "binary": "map-visualizer",
+      "sha256": "782d0d24d795a35335b84dcb8b08458af5e97eeca71b853914cc8b590ad1462f",
+      "platform": "linux-x86_64",
+      "live_verified": false
+    }
   ]
 }

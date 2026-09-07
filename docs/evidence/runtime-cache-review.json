@@ -1,0 +1,41 @@
+{
+  "schema": "ascension-map-runtime-cache-review-v1",
+  "source_commit": "c4574555bf383014479b5651b59e0f90c0a40715",
+  "status": "independent_source_review_accepted_final_workspace_checks_passed",
+  "live_verified": false,
+  "review": {
+    "authoring_role": "provider runtime owner and root timing integration",
+    "reviewer_role": "independent release reviewer",
+    "blocking_findings_remaining": 0,
+    "closed_findings": [
+      "Fresh visited flags preserved on topology hits",
+      "Full host action payload and current catalog validation before every cache layer",
+      "Strict protocol snapshot validation before cache retention",
+      "Raw MCP duplicate-key rejection before JSON value parsing",
+      "Renderer file limit enforced before allocation and full PNG decode before retention",
+      "Operational synchronous concurrency bound documented without claiming generic in-flight guard use",
+      "Conservative render reuse and executable-default presentation settings documented",
+      "Monotonic capture, validation, analysis and render measurements separate from cache-hit records"
+    ]
+  },
+  "focused_validation": [
+    {
+      "command": "cargo test --locked -p sts2-harness --bin sts2-harness-runtime map_ --jobs 2",
+      "passed": 13,
+      "exit_code": 0
+    },
+    {
+      "command": "cargo test --locked -p sts2-harness --bin sts2-harness-runtime production_render_cache_reuses_work_after_fresh_binding_validation --jobs 2",
+      "passed": 1,
+      "exit_code": 0
+    },
+    {
+      "command": "cargo run --locked --package repo-policy -- --strict",
+      "sized_files": 433,
+      "warnings": 0,
+      "errors": 0,
+      "exit_code": 0
+    }
+  ],
+  "evidence_boundary": "Independent source review, focused checks and final workspace suites passed at this source pin. Synthetic capture is recorded separately; live execution failed before its first provider decision."
+}

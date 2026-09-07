@@ -12,7 +12,7 @@
   },
   "accepted": {
     "explicit_spawn_settings": "gpt-5.6-luna / max",
-    "spawn_count": 12
+    "spawn_count": 14
   },
   "observed": [
     {
@@ -114,6 +114,24 @@
       "reasoning_effort": "max",
       "metadata_source": "independent installed-client thread metadata",
       "phase": "resumed independent provider review"
+    },
+    {
+      "agent_path": "/root/steam_issue",
+      "parent": "root",
+      "depth": 1,
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "max",
+      "metadata_source": "independent installed-client thread metadata",
+      "phase": "Steam startup issue and independent triage"
+    },
+    {
+      "agent_path": "/root/steam_triage",
+      "parent": "root",
+      "depth": 1,
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "max",
+      "metadata_source": "independent installed-client thread metadata",
+      "phase": "Steam startup issue and independent triage"
     }
   ],
   "nesting": {
@@ -125,7 +143,7 @@
     "project_ceiling": 12,
     "peak_observed_open_descendants": 8,
     "reservation_registry": "private root-owned atomic ledger",
-    "current_open_descendants": 4,
+    "current_open_descendants": 6,
     "resumption": "Previous native registry contained no descendants before resumed bounded tasks were assigned; unused nested reservations were cancelled after capability failure."
   },
   "project_config": "Supported keys parsed; explicit spawn arguments independently observed. No effective project-config reload claimed.",

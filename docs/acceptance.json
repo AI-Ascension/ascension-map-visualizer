@@ -78,7 +78,12 @@
     "host_map_snapshot": "unverified",
     "provider_graph_image_input": "unverified",
     "settled_map_action": "unverified",
-    "game_or_provider_launched": false
+    "game_or_provider_launched": true,
+    "host_bootstrap_attempts": 2,
+    "first_attempt": "host exited before readiness because Steam was unavailable; zero provider calls and actions; cleanup baseline preserved",
+    "current_attempt": "terminal failure on first episode observation after host readiness; zero provider decisions and game actions; cause diagnosis pending",
+    "steam_startup_issue": "https://github.com/AI-Ascension/sts2-game-mod/issues/56",
+    "evidence": "docs/evidence/live-attempts.json"
   },
   "component_evidence": {
     "offline_product": {
@@ -99,7 +104,7 @@
       "integrated_host_settlement": false
     },
     "evaluation": {
-      "status": "focused_checks_passed_final_assembly_pending",
+      "status": "final_workspace_checks_passed_live_unverified",
       "repair_commit": "d8285f04a7dc8fcb45635df2f190bfac8e4a3efb",
       "reason": "Measured synthetic tasks, bounded traversal, and actual renderer PNG now replace the rejected preliminary matrix; all four modes passed owner execution."
     },
@@ -119,21 +124,24 @@
       "campaign_review_evidence": "docs/evidence/campaign-guard-review.json"
     },
     "provider": {
-      "status": "repair_in_progress",
+      "status": "final_workspace_and_synthetic_capture_passed_live_unverified",
       "independent_review": "capability negotiation, renderer and bridge provenance, early authority checks, secure temporary storage, execution lineage",
       "real_provider_delivery": false,
-      "runtime_feed_publication": "implemented; final source and live gates pending",
-      "synthetic_cli_capture": "docs/evidence/provider-cli-capture.json"
+      "runtime_feed_publication": "implemented and source-reviewed; live unverified",
+      "synthetic_cli_capture": "docs/evidence/provider-cli-capture.json",
+      "assembly_evidence": "docs/evidence/harness-assembly.json"
     },
     "storage": {
-      "status": "focused_checks_passed_final_assembly_pending",
+      "status": "final_workspace_checks_passed_live_unverified",
       "repair_commit": "acdf07ec18545807286678f2c68a12cf91f89df6",
       "reason": "Operating-system transaction lock and finite retention implemented; six concurrency, capacity, collision, and symlink regressions passed."
     },
     "cache": {
-      "status": "production_integration_under_repair",
-      "reason": "Independent review found the original bounded cache types were not consumed by runtime. Production reuse and fresh authorization checks are being implemented and require final independent review and cold/warm/invalidation validation.",
-      "artifact_deduplication_is_computational_cache": false
+      "status": "final_workspace_checks_passed_live_unverified",
+      "source_commit": "c4574555bf383014479b5651b59e0f90c0a40715",
+      "evidence": "docs/evidence/runtime-cache-review.json",
+      "artifact_deduplication_is_computational_cache": false,
+      "real_provider_or_game_evidence": false
     }
   }
 }

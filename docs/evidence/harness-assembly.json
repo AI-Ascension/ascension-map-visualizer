@@ -1,0 +1,59 @@
+{
+  "schema": "ascension-map-harness-assembly-v1",
+  "source_commit": "c4574555bf383014479b5651b59e0f90c0a40715",
+  "source_clean_at_validation": true,
+  "platform": "linux-x86_64",
+  "pull_request": "https://github.com/AI-Ascension/sts2-harness/pull/35",
+  "status": "source_and_synthetic_boundary_validated",
+  "live_verified": false,
+  "checks": [
+    {
+      "command": "cargo fmt --all --check",
+      "exit_code": 0
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets --all-features --locked -- -D warnings",
+      "exit_code": 0
+    },
+    {
+      "command": "cargo test --workspace --all-targets --all-features --locked",
+      "exit_code": 0,
+      "suites": 38,
+      "passed": 249,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "command": "cargo run --locked --package repo-policy -- --strict",
+      "exit_code": 0,
+      "sized_files": 433,
+      "warnings": 0,
+      "errors": 0
+    }
+  ],
+  "independent_graph_oracle": {
+    "passed": 9,
+    "failed": 0
+  },
+  "synthetic_evaluation": {
+    "modes_passed": 4,
+    "cases_per_mode": 1,
+    "nodes_per_case": 4,
+    "edges_per_case": 4,
+    "rendered_png_bytes": 60907,
+    "real_provider_calls": 0
+  },
+  "provider_capture": "provider-cli-capture.json",
+  "cache_review": "runtime-cache-review.json",
+  "hosted_checks": [
+    {
+      "run": "https://github.com/AI-Ascension/sts2-harness/actions/runs/34151327021",
+      "conclusion": "SUCCESS"
+    },
+    {
+      "run": "https://github.com/AI-Ascension/sts2-harness/actions/runs/34151327029",
+      "conclusion": "SUCCESS"
+    }
+  ],
+  "limits": "This source pin passed source and synthetic checks. Two subsequent disposable attempts failed before provider decisions or gameplay actions. Diagnostic repairs require their own source and binary pins."
+}
