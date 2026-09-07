@@ -144,5 +144,11 @@
       "artifact_deduplication_is_computational_cache": false,
       "real_provider_or_game_evidence": false
     }
+  },
+  "replay_repair": {
+    "source_commit": "423d9052c8780173e640fa5991e88e8bae282f47",
+    "local_checks": "passed",
+    "independent_review": "blocked_account_usage_limit",
+    "live_verified": false
   }
 }

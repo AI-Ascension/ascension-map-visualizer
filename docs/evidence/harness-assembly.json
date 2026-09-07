@@ -75,5 +75,27 @@
     "runtime_sha256": "3ce38941077e3147cd7438f8ff7e41751ff916aff56f124712e7814f0e3426f3",
     "bridge_sha256": "a4c42de77b49eac119021b08aeb1f5ade81c7d0c83f5979adf9ad797937c10f8",
     "live_execution_of_latest_runtime": false
+  },
+  "replay_update": {
+    "source_commit": "423d9052c8780173e640fa5991e88e8bae282f47",
+    "workspace_suites": 38,
+    "tests_passed": 259,
+    "tests_failed": 0,
+    "tests_ignored": 0,
+    "format_exit_code": 0,
+    "clippy_exit_code": 0,
+    "test_exit_code": 0,
+    "policy_exit_code": 0,
+    "policy_sized_files": 436,
+    "policy_warnings": 0,
+    "policy_errors": 0,
+    "build_exit_code": 0,
+    "source_hashes_unchanged_during_validation": true,
+    "independent_review": "incomplete_account_usage_limit",
+    "runtime_sha256": "58d1fc0ee31e18a1aa9df3313cb75c363a3372104afd2ccc9531115d2c76999a",
+    "bridge_sha256": "d608c0290ce3f2b59b1c0be8a5e78c122f31cdede99626d5680e761ba66bbcd9",
+    "live_execution": false,
+    "actual_provider_capture_for_rebuilt_binary": false,
+    "semantics": "Validated exact source snapshot, matching analysis and manifest lineage, all source legal bindings independent of candidate pruning, historical non-dispatchable replay."
   }
 }
