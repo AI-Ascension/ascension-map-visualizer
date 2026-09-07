@@ -26,10 +26,11 @@
     },
     {
       "repository": "AI-Ascension/sts2-game-mod",
-      "commit": "f62fedbc28eef4f15f4b41a0d45da5999edc0c84",
+      "commit": "089a60dc9f6377cc38b23cfab3b12ad0a00aeef7",
+      "addon_source_commit": "f62fedbc28eef4f15f4b41a0d45da5999edc0c84",
       "pull_request": "https://github.com/AI-Ascension/sts2-game-mod/pull/54",
       "pending_source_changes": false,
-      "evidence_scope": "HD01 and main integration source gates passed; root independently passed managed map probe and verified staged addon hashes; PR54 three checks passed; live unverified"
+      "evidence_scope": "Addon source gates passed; staged addon hashes verified; launcher trace22 and strict policy passed, independent campaign review closed; latest hosted checks pending; live unverified"
     },
     {
       "repository": "AI-Ascension/sts2-gateway",

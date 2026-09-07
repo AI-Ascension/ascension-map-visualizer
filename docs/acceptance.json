@@ -99,13 +99,17 @@
       "integrated_host_settlement": false
     },
     "evaluation": {
-      "status": "repair_in_progress",
-      "reason": "Preliminary matrix used invented timings, oracle answers in context, and image metadata without PNG."
+      "status": "focused_checks_passed_final_assembly_pending",
+      "repair_commit": "d8285f04a7dc8fcb45635df2f190bfac8e4a3efb",
+      "reason": "Measured synthetic tasks, bounded traversal, and actual renderer PNG now replace the rejected preliminary matrix; all four modes passed owner execution."
     },
     "host": {
       "status": "build_and_probe_checks_passed",
       "code_commit": "f62fedbc28eef4f15f4b41a0d45da5999edc0c84",
-      "documentation_head": "f62fedbc28eef4f15f4b41a0d45da5999edc0c84",
+      "documentation_head": "089a60dc9f6377cc38b23cfab3b12ad0a00aeef7",
+      "launcher_head": "089a60dc9f6377cc38b23cfab3b12ad0a00aeef7",
+      "campaign_trace_checks_passed": 22,
+      "campaign_independent_review": "all findings closed; clean harness campaign tests passed twice",
       "pull_request": "https://github.com/AI-Ascension/sts2-game-mod/pull/54",
       "independent_delta_review": "Identity/generation findings and incremental child bound closed; root map probe passed at final source; final addon hashes independently checked",
       "disposable_addon_staged": true,
@@ -117,11 +121,13 @@
       "status": "repair_in_progress",
       "independent_review": "capability negotiation, renderer and bridge provenance, early authority checks, secure temporary storage, execution lineage",
       "real_provider_delivery": false,
-      "runtime_feed_publication": "implementation in progress"
+      "runtime_feed_publication": "implemented; final source and live gates pending",
+      "synthetic_cli_capture": "docs/evidence/provider-cli-capture.json"
     },
     "storage": {
-      "status": "repair_in_progress",
-      "reason": "Serialize concurrent feed publication and enforce finite retained storage."
+      "status": "focused_checks_passed_final_assembly_pending",
+      "repair_commit": "acdf07ec18545807286678f2c68a12cf91f89df6",
+      "reason": "Operating-system transaction lock and finite retention implemented; six concurrency, capacity, collision, and symlink regressions passed."
     }
   }
 }
