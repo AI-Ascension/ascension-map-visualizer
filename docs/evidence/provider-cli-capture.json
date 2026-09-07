@@ -4,9 +4,9 @@
   "real_provider_called": false,
   "game_launched": false,
   "boundary": "Serialized Exo request through the actual Astra bridge executable to a private codex CLI capture shim",
-  "tool_commit": "99ee3eac080ac03a186e0081505f131ea95d3a3c",
-  "bridge_sha256": "a4c42de77b49eac119021b08aeb1f5ade81c7d0c83f5979adf9ad797937c10f8",
-  "bridge_source_status": "Capture repeated after diagnostic rebuild at 99ee3ea; bridge binary remains byte-identical after 4e8c93a request-diagnostic changes",
+  "tool_commit": "423d9052c8780173e640fa5991e88e8bae282f47",
+  "bridge_sha256": "d608c0290ce3f2b59b1c0be8a5e78c122f31cdede99626d5680e761ba66bbcd9",
+  "bridge_source_status": "Capture repeated against the rebuilt replay repair binary at 423d905",
   "renderer_source_commit": "5b1d196480685a313bc2417d5b4450a63cc89ce5",
   "renderer_sha256": "782d0d24d795a35335b84dcb8b08458af5e97eeca71b853914cc8b590ad1462f",
   "nodes": 76,
@@ -26,5 +26,7 @@
     "missing_bridge_fails_closed": true,
     "standalone_checkout_without_product_sibling": true
   },
-  "limits": "Synthetic input and fake decision. Does not establish MCP/gateway/host integration, real provider delivery, image comprehension, or host settlement."
+  "limits": "Synthetic input and fake decision. Does not establish MCP/gateway/host integration, real provider delivery, image comprehension, or host settlement.",
+  "model_execution_id": "replay-capture-423d905",
+  "report": "provider-cli-capture-replay.md"
 }

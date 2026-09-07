@@ -95,7 +95,8 @@
     "runtime_sha256": "58d1fc0ee31e18a1aa9df3313cb75c363a3372104afd2ccc9531115d2c76999a",
     "bridge_sha256": "d608c0290ce3f2b59b1c0be8a5e78c122f31cdede99626d5680e761ba66bbcd9",
     "live_execution": false,
-    "actual_provider_capture_for_rebuilt_binary": false,
-    "semantics": "Validated exact source snapshot, matching analysis and manifest lineage, all source legal bindings independent of candidate pruning, historical non-dispatchable replay."
+    "actual_provider_capture_for_rebuilt_binary": true,
+    "semantics": "Validated exact source snapshot, matching analysis and manifest lineage, all source legal bindings independent of candidate pruning, historical non-dispatchable replay.",
+    "capture_scope": "Synthetic CLI boundary; no real provider call"
   }
 }
