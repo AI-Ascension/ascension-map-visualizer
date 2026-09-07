@@ -103,8 +103,13 @@ impl Source {
             let frame = if let Some(frame) = cached {
                 frame
             } else {
-                let bundle =
-                    Bundle::load(&root.bundle(id).map_err(|_| "feed bundle unavailable")?)?;
+                let bundle = Bundle::load(&root.bundle(id).map_err(|error| {
+                    if error.kind() == std::io::ErrorKind::InvalidData {
+                        AcquisitionError::Invalid("feed bundle rejected")
+                    } else {
+                        AcquisitionError::Io("feed bundle unavailable")
+                    }
+                })?)?;
                 if bundle.id() != id {
                     return Err(AcquisitionError::Invalid("feed bundle digest mismatch"));
                 }

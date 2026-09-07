@@ -3,7 +3,7 @@
 
 use crate::{bundle::Bundle, storage::File};
 
-pub(crate) fn load() -> Result<Bundle, &'static str> {
+pub(crate) fn load() -> Result<Bundle, crate::source::AcquisitionError> {
     Bundle::load_with(|file| {
         let bytes: &[u8] = match file {
             File::Manifest => include_bytes!("../../../fixtures/demo/manifest.json"),
@@ -11,7 +11,7 @@ pub(crate) fn load() -> Result<Bundle, &'static str> {
             File::Analysis => include_bytes!("../../../fixtures/demo/analysis.json"),
             File::Decision => include_bytes!("../../../fixtures/demo/decision.json"),
             File::Viewer => include_bytes!("../../../fixtures/demo/viewer.json"),
-            _ => return Err("embedded demo artifact unavailable"),
+            _ => return Err("embedded demo artifact unavailable".into()),
         };
         Ok(bytes.to_vec())
     })

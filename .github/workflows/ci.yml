@@ -63,7 +63,12 @@ jobs:
   browser:
     name: Browser interaction and security
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 30
+    env:
+      CARGO_BUILD_JOBS: 2
+      ASCENSION_MAP_SMALL_BUNDLE: ${{ github.workspace }}/artifacts/map-browser-small
+      ASCENSION_MAP_DENSE_BUNDLE: ${{ github.workspace }}/artifacts/map-browser-dense
+      ASCENSION_MAP_VISUALIZER_BIN: ${{ github.workspace }}/target/release/map-visualizer
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -73,6 +78,13 @@ jobs:
           node --version
           npm --version
       - run: node tools/contracts.mjs
+      - name: Build actual CLI and fresh browser integration artifacts
+        run: |
+          rustup toolchain install 1.97.1 --profile minimal --no-self-update
+          cargo build --release --locked --package map-visualizer
+          mkdir -p artifacts
+          "$ASCENSION_MAP_VISUALIZER_BIN" render --bundle fixtures/conformance --out "$ASCENSION_MAP_SMALL_BUNDLE"
+          "$ASCENSION_MAP_VISUALIZER_BIN" demo --out "$ASCENSION_MAP_DENSE_BUNDLE"
       - run: npm ci --ignore-scripts
       - run: npx --no-install playwright install --with-deps chromium
       - run: npm run test:browser

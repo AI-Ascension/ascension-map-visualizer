@@ -62,7 +62,7 @@ pub fn execute(command: Command) -> Result<(), Failure> {
             serve: start_server,
             port,
         } => {
-            let bundle = crate::demo::load().map_err(|message| Failure { code: 3, message })?;
+            let bundle = crate::demo::load().map_err(acquisition_failure)?;
             let started = Instant::now();
             let report = bundle
                 .render_to(&out, presentation::Settings::default())
@@ -86,7 +86,7 @@ pub fn execute(command: Command) -> Result<(), Failure> {
 fn load(path: &Path, telemetry: &Telemetry) -> Result<Bundle, Failure> {
     let started = Instant::now();
     let root = ArtifactRoot::open(path).map_err(|_| io_failure("bundle root unavailable"))?;
-    let bundle = Bundle::load(&root).map_err(|message| Failure { code: 3, message })?;
+    let bundle = Bundle::load(&root).map_err(acquisition_failure)?;
     telemetry.record(&bundle, Stage::Validation, started, 0);
     Ok(bundle)
 }

@@ -4,6 +4,7 @@
 use crate::{
     contracts::{self, Kind},
     digest, json,
+    source::AcquisitionError,
     storage::{ArtifactRoot, File},
 };
 use serde_json::Value;
@@ -21,23 +22,23 @@ pub struct Bundle {
 }
 
 impl Bundle {
-    pub fn load(root: &ArtifactRoot) -> Result<Self, &'static str> {
+    pub fn load(root: &ArtifactRoot) -> Result<Self, AcquisitionError> {
         Self::load_with(|file| read(root, file))
     }
 
     pub(crate) fn load_with(
-        read_file: impl Fn(File) -> Result<Vec<u8>, &'static str>,
-    ) -> Result<Self, &'static str> {
+        read_file: impl Fn(File) -> Result<Vec<u8>, AcquisitionError>,
+    ) -> Result<Self, AcquisitionError> {
         let manifest = json::decode(&read_file(File::Manifest)?, File::Manifest.limit() as usize)?;
         contracts::validate(Kind::Bundle, &manifest)?;
         let expected = string(&manifest, "bundle_digest")?;
         if json::content_digest(&manifest, "bundle_digest")? != expected {
-            return Err("bundle manifest digest mismatch");
+            return Err(AcquisitionError::Invalid("bundle manifest digest mismatch"));
         }
         if string(&manifest, "schema_profile")? != "runtime-map-v1"
             || string(&manifest, "schema_digest")? != RUNTIME_MAP_V1_SCHEMA_DIGEST
         {
-            return Err("unsupported snapshot contract");
+            return Err(AcquisitionError::Invalid("unsupported snapshot contract"));
         }
         let snapshot_bytes = read_file(File::Snapshot)?;
         verify_bytes(&snapshot_bytes, string(&manifest, "snapshot_digest")?)?;
@@ -52,7 +53,9 @@ impl Bundle {
             || string(&manifest, "snapshot_digest")? != string(&analysis, "snapshot_digest")?
             || string(&manifest, "analysis_version")? != string(&analysis, "analysis_version")?
         {
-            return Err("analysis digest or version mismatch");
+            return Err(AcquisitionError::Invalid(
+                "analysis digest or version mismatch",
+            ));
         }
         validate_identity(&manifest, &snapshot, &analysis)?;
         let contents = manifest.get("contents").ok_or("bundle contents missing")?;
@@ -84,12 +87,16 @@ impl Bundle {
                 || bundle.svg.is_some()
                 || bundle.png.is_some()
             {
-                return Err("unrendered viewer must be an explicit empty object");
+                return Err(AcquisitionError::Invalid(
+                    "unrendered viewer must be an explicit empty object",
+                ));
             }
         } else if string(&bundle.manifest, "renderer_version")? != crate::RENDERER_VERSION
             || stored_viewer != expected_viewer
         {
-            return Err("stored viewer does not match validated bundle");
+            return Err(AcquisitionError::Invalid(
+                "stored viewer does not match validated bundle",
+            ));
         } else {
             bundle.verify_rendered_images()?;
         }
@@ -189,12 +196,12 @@ fn validate_identity(
 }
 
 fn optional(
-    read_file: &impl Fn(File) -> Result<Vec<u8>, &'static str>,
+    read_file: &impl Fn(File) -> Result<Vec<u8>, AcquisitionError>,
     contents: &Value,
     file: File,
     reference: &str,
     hash: &str,
-) -> Result<Option<Vec<u8>>, &'static str> {
+) -> Result<Option<Vec<u8>>, AcquisitionError> {
     match (contents.get(reference), contents.get(hash)) {
         (Some(Value::Null), Some(Value::Null)) => Ok(None),
         (Some(Value::String(name)), Some(Value::String(expected))) if name == file.name() => {
@@ -202,13 +209,18 @@ fn optional(
             verify_bytes(&bytes, expected)?;
             Ok(Some(bytes))
         }
-        _ => Err("inconsistent optional artifact"),
+        _ => Err(AcquisitionError::Invalid("inconsistent optional artifact")),
     }
 }
 
-pub(crate) fn read(root: &ArtifactRoot, file: File) -> Result<Vec<u8>, &'static str> {
-    root.read(file)
-        .map_err(|_| "artifact file unavailable or rejected")
+pub(crate) fn read(root: &ArtifactRoot, file: File) -> Result<Vec<u8>, AcquisitionError> {
+    root.read(file).map_err(|error| {
+        if error.kind() == std::io::ErrorKind::InvalidData {
+            AcquisitionError::Invalid("artifact file rejected")
+        } else {
+            AcquisitionError::Io("artifact file unavailable")
+        }
+    })
 }
 
 pub(crate) fn string<'a>(value: &'a Value, field: &str) -> Result<&'a str, &'static str> {
