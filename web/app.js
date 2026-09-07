@@ -389,11 +389,15 @@
     refs.noticeRegion.appendChild(notice);
   }
 
+  function isHistoricalView() {
+    return Boolean(state.historicalOverride || (state.payload && state.payload.historical) || (state.source === "offline" && state.payload && !state.payload.bundle_id));
+  }
+
   function setConnectionBadge() {
     var badge = refs.connectionBadge;
     badge.className = "status-badge";
     var label = "Offline";
-    if (state.historicalOverride || (state.payload && state.payload.historical)) {
+    if (isHistoricalView()) {
       badge.classList.add("status-historical"); label = "Historical";
     } else if (state.source === "live" && state.live.connected) {
       badge.classList.add("status-live"); label = "Live";
@@ -415,9 +419,9 @@
     var status = state.payload.map.status;
     var words = status.toUpperCase().split(/[^A-Z]+/u).filter(Boolean);
     if (words.includes("STALE") || words.includes("INCOMPLETE") || !state.payload.complete) badge.classList.add("status-warning");
-    if (words.includes("CURRENT")) badge.classList.add("status-live");
-    if (state.historicalOverride || state.payload.historical) badge.classList.add("status-historical");
-    badge.textContent = state.historicalOverride ? "HISTORICAL · READ ONLY" : status;
+    if (isHistoricalView()) badge.classList.add("status-historical");
+    else if (words.includes("CURRENT")) badge.classList.add("status-live");
+    badge.textContent = isHistoricalView() ? "HISTORICAL · READ ONLY" : status;
   }
 
   function updateSourceLabels() {
@@ -743,6 +747,12 @@
     parent.appendChild(list);
   }
 
+  function appendHistoricalContext(parent) {
+    if (!isHistoricalView()) return;
+    parent.appendChild(make("p", { class: "historical-note" }, "Historical frame · recorded authorization only. No current action is available."));
+    parent.appendChild(make("p", { class: "muted-copy" }, "Recorded source status: " + state.payload.map.status));
+  }
+
   function renderInspector() {
     removeChildren(refs.inspectorBody);
     if (!state.payload || !state.selected) {
@@ -753,6 +763,7 @@
         refs.inspectorBody.appendChild(make("p", { class: "inspector-lead" }, state.payload.map.nodes.length + " visible nodes and " + state.payload.map.edges.length + " directed connections are present in this frame."));
         refs.inspectorBody.appendChild(make("p", { class: "muted-copy" }, "Select any graph element to inspect it. Route choices are annotations only; this viewer has no game action endpoints."));
         appendCandidateList(refs.inspectorBody);
+        appendHistoricalContext(refs.inspectorBody);
       }
       return;
     }
@@ -794,7 +805,7 @@
       var edgeState = make("div", { class: "state-list" }); edgeState.appendChild(stateChip("recorded route", edge.selected)); refs.inspectorBody.appendChild(edgeState);
       refs.inspectorBody.appendChild(make("p", { class: "muted-copy historical-note" }, "Inspect only. A selected edge does not authorize a game action."));
     }
-    if (state.historicalOverride || state.payload.historical) refs.inspectorBody.appendChild(make("p", { class: "historical-note" }, "Historical frame · recorded authorization only. No current action is available."));
+    appendHistoricalContext(refs.inspectorBody);
   }
 
   function renderSearchResults() {

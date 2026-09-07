@@ -33,6 +33,21 @@ npm run test:browser
 
 The suite covers file loading, strict hostile-label rendering, fit/zoom, search, pointer and keyboard inspection, overlay preservation, candidate/replay state, fixed-route live loading, and desktop/mobile layouts. Playwright writes reports and screenshots under ignored `artifacts/` paths. No external network or provider call is needed.
 
-When the generated Linux artifacts and release CLI are available, `npx playwright test tests/browser/generated.integration.spec.js` runs the integration check separately from the synthetic fixtures. By default it reads `/tmp/ascension-map-first-render-20260907`, `/tmp/ascension-map-linux-release-demo-20260907`, and `/tmp/ascension-map-targets/visualizer/release/map-visualizer`; set `ASCENSION_MAP_SMALL_BUNDLE`, `ASCENSION_MAP_DENSE_BUNDLE`, and `ASCENSION_MAP_VISUALIZER_BIN` to use another generated run. The check opens each exported `index.html` through `file://`, loads its `viewer.json` with the picker, verifies the complete graph and candidate summaries, records desktop/mobile screenshots for the dense artifact, and launches the release binary with `serve --bundle` to verify historical current/replay responses and fixed routes. It skips with an explicit reason when these external generated inputs are absent.
+When the generated artifacts and release CLI are available, `npx playwright test tests/browser/generated.integration.spec.js` runs the integration check separately from the synthetic fixtures. Generate fresh inputs from the checked-in conformance and demo sources before running it:
+
+```sh
+cargo build --release --locked --package map-visualizer
+run_root="$(mktemp -d)"
+small_bundle="$run_root/small"
+dense_bundle="$run_root/dense"
+target/release/map-visualizer render --bundle fixtures/conformance --out "$small_bundle"
+target/release/map-visualizer demo --out "$dense_bundle"
+ASCENSION_MAP_SMALL_BUNDLE="$small_bundle" \
+ASCENSION_MAP_DENSE_BUNDLE="$dense_bundle" \
+ASCENSION_MAP_VISUALIZER_BIN="$PWD/target/release/map-visualizer" \
+npx playwright test tests/browser/generated.integration.spec.js
+```
+
+The check opens each exported `index.html` through `file://`, loads its `viewer.json` with the picker, verifies the complete graph and candidate summaries, records desktop/mobile screenshots for the dense artifact, and launches the release binary with `serve --bundle` to verify historical current/replay responses and fixed routes. Local runs skip with an explicit reason when these generated inputs are absent; CI treats missing inputs as a failure.
 
 The view is intentionally bounded by the presentation contract: 2 MiB JSON input, 1024 nodes, 8192 edges, 4096 replay descriptors, signed 16-bit floor/lane coordinates, and 512 UTF-8 bytes per identity or text field. Canonical IDs and bundle IDs use printable ASCII; text labels reject control, bidi, and invisible formatting characters. Very dense or very tall maps remain complete but may require zooming to read labels. Raster overview images and game/native projection remain owned by the Rust adapter and upstream producers.

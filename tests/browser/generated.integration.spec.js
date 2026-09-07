@@ -4,12 +4,14 @@ const { spawn } = require('node:child_process');
 const { pathToFileURL } = require('node:url');
 const { test, expect } = require('@playwright/test');
 
-const smallBundle = process.env.ASCENSION_MAP_SMALL_BUNDLE || '/tmp/ascension-map-first-render-20260907';
-const denseBundle = process.env.ASCENSION_MAP_DENSE_BUNDLE || '/tmp/ascension-map-linux-release-demo-20260907';
-const visualizerBinary = process.env.ASCENSION_MAP_VISUALIZER_BIN || '/tmp/ascension-map-targets/visualizer/release/map-visualizer';
+const smallBundle = process.env.ASCENSION_MAP_SMALL_BUNDLE || '';
+const denseBundle = process.env.ASCENSION_MAP_DENSE_BUNDLE || '';
+const visualizerBinary = process.env.ASCENSION_MAP_VISUALIZER_BIN || '';
 const screenshots = path.resolve(__dirname, '../../artifacts/browser');
-const generatedInputsPresent = [smallBundle, denseBundle].every((directory) => fs.existsSync(path.join(directory, 'index.html')) && fs.existsSync(path.join(directory, 'viewer.json')));
+const generatedInputsPresent = Boolean(smallBundle && denseBundle) && [smallBundle, denseBundle].every((directory) => fs.existsSync(path.join(directory, 'index.html')) && fs.existsSync(path.join(directory, 'viewer.json')));
 const cliInputPresent = generatedInputsPresent && fs.existsSync(visualizerBinary);
+const generatedSkipMessage = 'generated bundle exports are not present; set ASCENSION_MAP_SMALL_BUNDLE and ASCENSION_MAP_DENSE_BUNDLE to enable this integration check';
+const cliSkipMessage = 'release CLI or generated bundle is not present; set ASCENSION_MAP_VISUALIZER_BIN, ASCENSION_MAP_SMALL_BUNDLE, and ASCENSION_MAP_DENSE_BUNDLE to enable this integration check';
 
 function graphText(nodes, edges) {
   return `${nodes} nodes · ${edges} edges`;
@@ -65,32 +67,40 @@ function assertNoHttpRequests(observations) {
 test.describe.configure({ mode: 'serial' });
 
 test.describe('actual CLI-generated bundle exports', () => {
-  test.skip(!generatedInputsPresent, 'generated bundle exports are not present; set ASCENSION_MAP_SMALL_BUNDLE and ASCENSION_MAP_DENSE_BUNDLE to enable this integration check');
+  if (process.env.CI && !generatedInputsPresent) {
+    test('requires fresh generated bundle exports in CI', () => {
+      throw new Error(generatedSkipMessage);
+    });
+  } else {
+    test.skip(!generatedInputsPresent, generatedSkipMessage);
 
-  test('opens both exported index files through file mode and inspects their complete graphs', async ({ page }) => {
+    test('opens both exported index files through file mode and inspects their complete graphs', async ({ page }) => {
     const small = await loadExportedArtifact(page, smallBundle, 4, 4, 2);
-    await expect(page.locator('#connection-badge')).toHaveText('Offline');
-    await expect(page.locator('#map-status-badge')).toHaveText('AVAILABLE / COMPLETE / CURRENT');
-    await expect(page.locator('.candidate-summary').first()).toContainText('3 visible nodes');
+    await expect(page.locator('#connection-badge')).toHaveText('Historical');
+    await expect(page.locator('#map-status-badge')).toHaveText('HISTORICAL · READ ONLY');
+    await expect(page.locator('.candidate-summary').first()).toContainText('3 nodes; rest');
     await page.locator('.candidate-button').last().click();
     await expect(page.locator('.candidate-button').last()).toHaveAttribute('aria-pressed', 'true');
     await inspectGraph(page, 1);
+    await expect(page.locator('#inspector-body')).toContainText('Recorded source status: AVAILABLE / COMPLETE / CURRENT');
     assertNoHttpRequests(small);
 
     const dense = await loadExportedArtifact(page, denseBundle, 76, 182, 8);
-    await expect(page.locator('#connection-badge')).toHaveText('Offline');
-    await expect(page.locator('#map-status-badge')).toHaveText('AVAILABLE / COMPLETE / CURRENT');
+    await expect(page.locator('#connection-badge')).toHaveText('Historical');
+    await expect(page.locator('#map-status-badge')).toHaveText('HISTORICAL · READ ONLY');
     await expect(page.locator('.candidate-summary').first()).toContainText('13 nodes');
     await page.locator('.candidate-button').nth(7).click();
     await expect(page.locator('.candidate-button').nth(7)).toHaveAttribute('aria-pressed', 'true');
     await inspectGraph(page, 91);
+    await expect(page.locator('#inspector-body')).toContainText('Recorded source status: AVAILABLE / COMPLETE / CURRENT');
     await page.screenshot({ path: screenshotPath('map-generated-dense-file'), fullPage: true });
     assertNoHttpRequests({
       consoleErrors: [...small.consoleErrors, ...dense.consoleErrors],
       pageErrors: [...small.pageErrors, ...dense.pageErrors],
       requests: [...small.requests, ...dense.requests],
     });
-  });
+    });
+  }
 });
 
 function startCliServer() {
@@ -134,30 +144,38 @@ function startCliServer() {
 
 let cliServer;
 test.describe('actual release CLI serve', () => {
-  test.skip(!cliInputPresent, 'release CLI or generated bundle is not present; set ASCENSION_MAP_VISUALIZER_BIN and ASCENSION_MAP_DENSE_BUNDLE to enable this integration check');
+  if (process.env.CI && !cliInputPresent) {
+    test('requires the release CLI and fresh generated bundles in CI', () => {
+      throw new Error(cliSkipMessage);
+    });
+  } else {
+    test.skip(!cliInputPresent, cliSkipMessage);
 
-  test.beforeAll(async () => {
-    cliServer = await startCliServer();
-  });
+    test.beforeAll(async () => {
+      cliServer = await startCliServer();
+    });
 
-  test.afterAll(async () => {
-    if (!cliServer) return;
-    cliServer.child.kill('SIGTERM');
-    await new Promise((resolve) => cliServer.child.once('exit', resolve));
-    cliServer = null;
-  });
+    test.afterAll(async () => {
+      if (!cliServer) return;
+      if (cliServer.child.exitCode === null) {
+        cliServer.child.kill('SIGTERM');
+        await new Promise((resolve) => cliServer.child.once('exit', resolve));
+      }
+      cliServer = null;
+    });
 
-  test('serves the dense graph, exposes replay, and marks the frame historical', async ({ page }) => {
+    test('serves the dense graph, exposes replay, and marks the frame historical', async ({ page }) => {
     const observations = observePage(page);
     await page.goto(`${cliServer.url}/index.html`);
     await expect(page.locator('#graph-count')).toHaveText(graphText(76, 182));
     await expect(page.locator('.node-group')).toHaveCount(76);
     await expect(page.locator('.edge-group')).toHaveCount(182);
     await expect(page.locator('#connection-badge')).toHaveText('Historical');
-    await expect(page.locator('#map-status-badge')).toHaveText('AVAILABLE / COMPLETE / CURRENT');
+    await expect(page.locator('#map-status-badge')).toHaveText('HISTORICAL · READ ONLY');
     await expect(page.locator('.candidate-button')).toHaveCount(8);
     await expect(page.locator('.candidate-summary').first()).toContainText('13 nodes');
     await inspectGraph(page, 91);
+    await expect(page.locator('#inspector-body')).toContainText('Recorded source status: AVAILABLE / COMPLETE / CURRENT');
 
     await expect(page.locator('#replay-select option')).toHaveCount(1);
     await expect(page.locator('#replay-count')).toHaveText('1 frame');
@@ -177,5 +195,6 @@ test.describe('actual release CLI serve', () => {
     expect(httpPaths).toContain(`/api/frame/${bundleId}`);
     expect(observations.consoleErrors).toEqual([]);
     expect(observations.pageErrors).toEqual([]);
-  });
+    });
+  }
 });

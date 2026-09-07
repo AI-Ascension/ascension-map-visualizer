@@ -5,6 +5,7 @@ const { test, expect } = require('@playwright/test');
 
 const fixture = path.resolve(__dirname, 'fixtures/example-viewer.json');
 const hostileFixture = path.resolve(__dirname, 'fixtures/hostile-viewer.json');
+const historicalFixture = path.resolve(__dirname, 'fixtures/historical-unbound-viewer.json');
 const indexUrl = '/index.html';
 const offlineUrl = pathToFileURL(path.resolve(__dirname, '../../web/index.html')).href;
 
@@ -61,6 +62,15 @@ test.describe('offline viewer', () => {
     await expect(page.locator('.empty-state')).toBeHidden();
     await expect(page.locator('script')).toHaveCount(1);
     expect(dialogs).toBe(0);
+  });
+
+  test('labels an explicitly historical unbound artifact before inspection', async ({ page }) => {
+    await loadOffline(page, historicalFixture, '2 nodes · 1 edges');
+    await expect(page.locator('#connection-badge')).toHaveText('Historical');
+    await expect(page.locator('#map-status-badge')).toHaveText('HISTORICAL · READ ONLY');
+    await page.locator('.node-group').first().click();
+    await expect(page.locator('#inspector-body')).toContainText('Historical frame');
+    await expect(page.locator('#inspector-body')).toContainText('Recorded source status: AVAILABLE / COMPLETE / CURRENT');
   });
 
   test('loads the bundled example with the same validated graph surface', async ({ page }) => {

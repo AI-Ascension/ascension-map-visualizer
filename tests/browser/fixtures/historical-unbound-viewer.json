@@ -1,0 +1,25 @@
+{
+  "schema": "ascension-map-viewer-v1",
+  "bundle_id": "",
+  "snapshot_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "analysis_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "map": {
+    "identity": "fixture-map-historical",
+    "status": "AVAILABLE / COMPLETE / CURRENT",
+    "nodes": [
+      {"id":"start","floor":0,"lane":1,"category":"start","current":true,"legal":true,"reachable":true,"visited":true},
+      {"id":"next","floor":1,"lane":1,"category":"event","current":false,"legal":true,"reachable":true,"visited":false}
+    ],
+    "edges": [
+      {"from":"start","to":"next","selected":true}
+    ]
+  },
+  "aliases": {"start":"N0001","next":"N0002"},
+  "candidates": [
+    {"id":"route-historical","nodes":["start","next"],"summary":"2 nodes; recorded historical route","selection":"recorded"}
+  ],
+  "historical": true,
+  "complete": true,
+  "available": true,
+  "warnings": []
+}
