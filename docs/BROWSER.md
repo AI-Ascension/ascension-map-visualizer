@@ -7,7 +7,7 @@ The browser product is a small static, read-only surface in `web/`. It consumes 
 From this repository, serve the `web/` directory on loopback:
 
 ```text
-python3 -m http.server 4173 --directory web
+python3 -m http.server 4173 --bind 127.0.0.1 --directory web
 ```
 
 Open `http://127.0.0.1:4173/index.html`. The hosted view asks only its own origin for `GET /api/current`, `GET /api/replay`, and `GET /api/frame/{safe bundle id}`. A server that does not implement those routes leaves the viewer visible and marks the source disconnected. The existing map stays intact until a complete, freshly validated payload arrives.
