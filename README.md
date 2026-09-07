@@ -56,10 +56,12 @@ cargo deny check
 npm ci --ignore-scripts
 npx --no-install playwright install chromium
 npm run test:browser
-cargo build --release --locked --package map-visualizer
+node tools/build-release.mjs
 node tools/package.mjs /tmp/map-distribution
 ```
 
 Choose a new output path appropriate for the operating system. Packaging supports native Linux x86-64 and Windows x86-64/MSVC, includes dependency notices and checksums, and creates a `.tar.gz` beside the distribution directory. Extract the archive to preserve Linux executable permissions. `build.json` records the native target, source commit, and dirty-worktree flag. CI builds and tests on both native platforms and retains build artifacts; it does not publish a release.
+
+Packaging rebuilds with [Rust source-path remapping](https://doc.rust-lang.org/rustc/remap-source-paths.html) and scans every distributed file for the local home, source, cache, toolchain, and target prefixes in UTF-8 and UTF-16. A plain local `cargo build` is suitable for development; use the packaging command for a shareable archive. The release helper preserves environment-supplied compiler flags and adds the distribution remapping rules without changing Cargo configuration files.
 
 All symbols/glyphs are original project assets. See [LICENSE](LICENSE) and [third-party notices](THIRD_PARTY_NOTICES.md).

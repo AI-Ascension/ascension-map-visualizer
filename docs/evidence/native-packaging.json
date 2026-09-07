@@ -1,0 +1,56 @@
+{
+  "schema": "ascension-map-native-packaging-v1",
+  "source_commit": "0fb467055ae907e1bbb2cae1f12b6210656c1deb",
+  "packages": [
+    {
+      "platform": "linux",
+      "build": {
+        "target": "x86_64-unknown-linux-gnu",
+        "commit": "0fb467055ae907e1bbb2cae1f12b6210656c1deb",
+        "dirty": false,
+        "native": true,
+        "version": "0.1.0"
+      },
+      "archive": "ascension-map-linux-package-0fb4670.tar.gz",
+      "archive_sha256": "b144bee2b9a336df5c714e398e43933a77b10a8c59ddb1089f3f2ba3859b68cd",
+      "rust_tests_passed": 31,
+      "checks": [
+        "cargo fmt --all --check",
+        "cargo clippy --workspace --all-targets --all-features --locked -- -D warnings",
+        "cargo test --workspace --all-targets --all-features --locked",
+        "cargo build --release --locked --package map-visualizer",
+        "tools/package.mjs",
+        "extracted archive SHA256SUMS verification",
+        "extracted executable doctor",
+        "extracted executable demo --out offline-demo",
+        "extracted executable validate --bundle offline-demo"
+      ],
+      "live_game_or_provider_evidence": false
+    },
+    {
+      "platform": "windows",
+      "build": {
+        "target": "x86_64-pc-windows-msvc",
+        "commit": "0fb467055ae907e1bbb2cae1f12b6210656c1deb",
+        "dirty": false,
+        "native": true,
+        "version": "0.1.0"
+      },
+      "archive": "ascension-map-windows-package-0fb4670.tar.gz",
+      "archive_sha256": "1843b7bbe9ccabffa63eb86bf5b103a1a1ee305c04d6cb34c25b50dcdc323759",
+      "rust_tests_passed": 29,
+      "checks": [
+        "cargo fmt --all --check",
+        "cargo clippy --workspace --all-targets --all-features --locked -- -D warnings",
+        "cargo test --workspace --all-targets --all-features --locked",
+        "cargo build --release --locked --package map-visualizer",
+        "tools/package.mjs",
+        "extracted archive SHA256SUMS verification",
+        "extracted executable doctor",
+        "extracted executable demo --out offline-demo",
+        "extracted executable validate --bundle offline-demo"
+      ],
+      "live_game_or_provider_evidence": false
+    }
+  ]
+}

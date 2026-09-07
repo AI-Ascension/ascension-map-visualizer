@@ -34,7 +34,7 @@ jobs:
       - run: cargo fmt --all --check
       - run: cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
       - run: cargo test --workspace --all-targets --all-features --locked
-      - run: cargo build --release --locked --package map-visualizer
+      - run: node tools/build-release.mjs
       - name: Native offline smoke test
         shell: bash
         run: |
@@ -81,7 +81,7 @@ jobs:
       - name: Build actual CLI and fresh browser integration artifacts
         run: |
           rustup toolchain install 1.97.1 --profile minimal --no-self-update
-          cargo build --release --locked --package map-visualizer
+          node tools/build-release.mjs
           mkdir -p artifacts
           "$ASCENSION_MAP_VISUALIZER_BIN" render --bundle fixtures/conformance --out "$ASCENSION_MAP_SMALL_BUNDLE"
           "$ASCENSION_MAP_VISUALIZER_BIN" demo --out "$ASCENSION_MAP_DENSE_BUNDLE"
