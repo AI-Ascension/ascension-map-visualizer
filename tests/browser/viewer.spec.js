@@ -24,6 +24,8 @@ test.describe('offline viewer', () => {
     await expect(page.locator('.node-group')).toHaveCount(8);
     await expect(page.locator('.edge-group')).toHaveCount(9);
     await expect(page.locator('.node-group').first()).toHaveAttribute('role', 'button');
+    await page.locator('.node-group').first().click();
+    await expect(page.locator('#inspector-heading')).toHaveText('Node inspection');
 
     await page.locator('[data-action="zoom-in"]').click();
     await expect(page.locator('#zoom-readout')).toHaveText('122%');

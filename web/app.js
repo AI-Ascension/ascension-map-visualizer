@@ -498,7 +498,7 @@
     return { x: position.x * VIEWBOX.width / viewWidth(), y: position.y };
   }
 
-  function edgeCurve(edge, index, positions) {
+  function edgeCurveGeometry(edge, index, positions) {
     var from = positions.get(edge.from);
     var to = positions.get(edge.to);
     var dx = to.x - from.x;
@@ -509,7 +509,10 @@
     var bend = offset * 10;
     var midX = (from.x + to.x) / 2 + perpendicular.x * bend;
     var midY = (from.y + to.y) / 2 + perpendicular.y * bend;
-    return "M " + from.x.toFixed(2) + " " + from.y.toFixed(2) + " Q " + midX.toFixed(2) + " " + midY.toFixed(2) + " " + to.x.toFixed(2) + " " + to.y.toFixed(2);
+    return {
+      path: "M " + from.x.toFixed(2) + " " + from.y.toFixed(2) + " Q " + midX.toFixed(2) + " " + midY.toFixed(2) + " " + to.x.toFixed(2) + " " + to.y.toFixed(2),
+      midpoint: { x: (from.x + (2 * midX) + to.x) / 4, y: (from.y + (2 * midY) + to.y) / 4 }
+    };
   }
 
   function routeNodeSet() {
@@ -583,9 +586,11 @@
       if (state.selected && state.selected.kind === "edge" && state.selected.index === index) group.classList.add("is-selected");
       if (state.overlays.routes && (edge.selected || routeEdges.has(edge.from + "\u0000" + edge.to))) group.classList.add("is-route");
       if (isEdgeDimmed(edge)) group.classList.add("is-dimmed");
-      var path = edgeCurve(edge, index, state.layout.positions);
+      var geometry = edgeCurveGeometry(edge, index, state.layout.positions);
+      var path = geometry.path;
       group.appendChild(makeSvg("path", { class: "edge-path", d: path }));
       group.appendChild(makeSvg("path", { class: "edge-hit", d: path, "aria-hidden": "true" }));
+      group.appendChild(makeSvg("circle", { class: "edge-hit-point", cx: geometry.midpoint.x, cy: geometry.midpoint.y, r: 15, "aria-hidden": "true" }));
       var title = makeSvg("title", {}, "Connection " + edge.from + " to " + edge.to);
       group.insertBefore(title, group.firstChild);
       group.addEventListener("pointerdown", function (event) { event.stopPropagation(); });
@@ -613,6 +618,7 @@
       if (state.overlays.routes && routeNodes.has(node.id)) group.classList.add("is-candidate");
       if (search && (node.id.toLowerCase().includes(search) || alias.toLowerCase().includes(search))) group.classList.add("is-search-match");
       if (isNodeDimmed(node)) group.classList.add("is-dimmed");
+      group.appendChild(makeSvg("circle", { class: "node-hit", cx: position.x, cy: position.y, r: 32, "aria-hidden": "true" }));
       group.appendChild(createNodeShape(node, position));
       if (category === "unknown" || node.category.toLowerCase() === "unknown") group.appendChild(makeSvg("text", { class: "node-unknown-mark", x: position.x, y: position.y + 1 }, "?"));
       group.appendChild(makeSvg("text", { class: "node-label", x: position.x, y: position.y + 39 }, alias));
