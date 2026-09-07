@@ -1,0 +1,49 @@
+{
+  "schema": "ascension-map-acceptance-v1",
+  "assignment": "prompts/ASCENSION_MAP_VISUALIZER_ORCHESTRATION_PROMPT.md",
+  "complete": false,
+  "gates": [
+    {
+      "id": "A",
+      "requirement": "Runtime preflight and repository discovery",
+      "status": "in_progress",
+      "evidence": []
+    },
+    {
+      "id": "B",
+      "requirement": "Ownership versioned contracts and fixtures",
+      "status": "unverified",
+      "evidence": []
+    },
+    {
+      "id": "C",
+      "requirement": "Native projection and fenced transport",
+      "status": "unverified",
+      "evidence": []
+    },
+    {
+      "id": "D",
+      "requirement": "Harness provider delivery and viewer",
+      "status": "unverified",
+      "evidence": []
+    },
+    {
+      "id": "E",
+      "requirement": "Integration offline packaging observability",
+      "status": "unverified",
+      "evidence": []
+    },
+    {
+      "id": "F",
+      "requirement": "Native provider validation and evaluation",
+      "status": "unverified",
+      "evidence": []
+    },
+    {
+      "id": "G",
+      "requirement": "Independent review repair and handoff",
+      "status": "unverified",
+      "evidence": []
+    }
+  ]
+}

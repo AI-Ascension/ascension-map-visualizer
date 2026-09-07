@@ -1,0 +1,22 @@
+[package]
+name = "map-visualizer"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Deterministic read-only presentation of validated permitted map bundles"
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+resvg.workspace = true
+cap-std.workspace = true
+
+[dev-dependencies]
+proptest = { version = "=1.11.0", default-features = false, features = ["std"] }
+tempfile = "=3.27.0"
+
+[lints]
+workspace = true
