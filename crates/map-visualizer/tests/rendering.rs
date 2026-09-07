@@ -48,6 +48,18 @@ fn graph() -> Map {
 }
 
 #[test]
+fn invisible_or_bidi_identity_is_rejected_before_svg_output() {
+    for suffix in ['\u{202e}', '\u{2066}', '\u{200b}', '\u{feff}'] {
+        let mut map = graph();
+        map.identity.push(suffix);
+        assert!(matches!(
+            render(&map, Settings::default()),
+            Err(Error::InvalidIdentity)
+        ));
+    }
+}
+
+#[test]
 fn every_node_and_directed_edge_is_retained_including_unreachable_branch() {
     let map = graph();
     let output = render(&map, Settings::default()).unwrap();

@@ -29,6 +29,7 @@ impl Layout {
         let lane_gap = 132.0 * stack;
         let width = (f64::from(max_lane - min_lane) + 1.0) * lane_gap + 160.0;
         let height = (f64::from(max_floor - min_floor) + 1.0) * 144.0 + 250.0;
+        let horizontal_padding = (740.0 - width).max(0.0) / 2.0;
         let positions = groups
             .into_iter()
             .flat_map(|((floor, lane), ids)| {
@@ -36,7 +37,10 @@ impl Layout {
                     (
                         id.to_owned(),
                         (
-                            110.0 + f64::from(lane - min_lane) * lane_gap + i as f64 * 132.0,
+                            110.0
+                                + horizontal_padding
+                                + f64::from(lane - min_lane) * lane_gap
+                                + i as f64 * 132.0,
                             180.0 + f64::from(max_floor - floor) * 144.0,
                         ),
                     )

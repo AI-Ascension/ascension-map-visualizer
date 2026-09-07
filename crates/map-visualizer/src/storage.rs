@@ -16,6 +16,7 @@ pub enum File {
     Viewer,
     Svg,
     Png,
+    Feed,
 }
 
 impl File {
@@ -28,6 +29,7 @@ impl File {
             Self::Viewer => "viewer.json",
             Self::Svg => "overview.svg",
             Self::Png => "overview.png",
+            Self::Feed => "feed.json",
         }
     }
 
@@ -35,7 +37,7 @@ impl File {
         match self {
             Self::Manifest | Self::Decision => 64 * 1024,
             Self::Snapshot => 256 * 1024,
-            Self::Analysis | Self::Viewer => 2 * 1024 * 1024,
+            Self::Analysis | Self::Viewer | Self::Feed => 2 * 1024 * 1024,
             Self::Svg => 16 * 1024 * 1024,
             Self::Png => 16 * 1024 * 1024,
         }
@@ -81,7 +83,7 @@ impl ArtifactRoot {
         let mut ids = Vec::new();
         // All directory entries are bounded, including ignored non-bundle files.
         for (index, entry) in self.0.entries()?.enumerate() {
-            if index >= 512 {
+            if index >= 8192 {
                 return Err(invalid());
             }
             let entry = entry?;
@@ -90,7 +92,7 @@ impl ArtifactRoot {
                 continue;
             };
             if kind.is_dir() && !kind.is_symlink() && valid_bundle_id(&id) {
-                if ids.len() >= 256 {
+                if ids.len() >= 4096 {
                     return Err(invalid());
                 }
                 ids.push(id);

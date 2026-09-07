@@ -3,7 +3,7 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize)]
 pub struct Node {
     pub id: String,
     pub floor: i32,
@@ -15,14 +15,14 @@ pub struct Node {
     pub visited: bool,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize)]
 pub struct Edge {
     pub from: String,
     pub to: String,
     pub selected: bool,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize)]
 pub struct Map {
     pub identity: String,
     pub status: String,
@@ -103,7 +103,7 @@ impl Map {
             if !text(&node.id) || !text(&node.category) {
                 return Err(Error::InvalidIdentity);
             }
-            if !(-4096..=4096).contains(&node.floor) || !(-4096..=4096).contains(&node.lane) {
+            if i16::try_from(node.floor).is_err() || i16::try_from(node.lane).is_err() {
                 return Err(Error::InvalidCoordinate);
             }
             if !ids.insert(node.id.as_str()) {
@@ -136,5 +136,7 @@ impl Map {
 }
 
 fn text(value: &str) -> bool {
-    !value.is_empty() && value.len() <= 512 && !value.chars().any(char::is_control)
+    // The pinned glyph alphabet and upstream canonical IDs are ASCII. Reject
+    // invisible/bidi characters rather than display an ambiguous identifier.
+    !value.is_empty() && value.len() <= 512 && value.bytes().all(|b| (32..=126).contains(&b))
 }

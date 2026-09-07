@@ -90,7 +90,7 @@ fn draw_node(out: &mut String, node: &Node, alias: &str, (x, y): (f64, f64)) {
         "#d3d9de"
     };
     let category = category_label(&node.category);
-    out.push_str(&format!("<g data-node-id=\"{}\" data-alias=\"{alias}\" opacity=\"{}\"><title>{alias}: {}; category {}; current {}; legal {}; visited {}</title>",escape(&node.id),if dim {"0.65"} else {"1"},escape(&node.id),escape(&node.category),node.current,node.legal,node.visited));
+    out.push_str(&format!("<g data-node-id=\"{}\" data-alias=\"{alias}\" data-reachable=\"{}\"><title>{alias}: {}; category {}; current {}; legal {}; visited {}</title>",escape(&node.id),node.reachable,escape(&node.id),escape(&node.category),node.current,node.legal,node.visited));
     if node.legal {
         out.push_str(&format!("<rect x=\"{:.2}\" y=\"{:.2}\" width=\"54\" height=\"54\" rx=\"8\" fill=\"#22262d\" stroke=\"{color}\" stroke-width=\"3\"/>",x-27.0,y-27.0));
     } else {
@@ -108,14 +108,21 @@ fn draw_node(out: &mut String, node: &Node, alias: &str, (x, y): (f64, f64)) {
             y - 22.0
         ));
     }
-    label(out, alias, x - 29.0, y + 39.0, 2.0, color);
+    // Opaque label backing keeps edges/arrows from crossing the identity text.
+    out.push_str(&format!(
+        "<rect x=\"{:.2}\" y=\"{:.2}\" width=\"96\" height=\"42\" fill=\"#171a1e\"/>",
+        x - 48.0,
+        y + 32.0
+    ));
+    let text_color = if dim { "#aeb7c0" } else { color };
+    label(out, alias, x - 34.8, y + 39.0, 2.4, text_color);
     label(
         out,
         category,
-        x - category.len() as f64 * 3.3,
+        x - category.len() as f64 * 3.9,
         y + 60.0,
-        1.1,
-        color,
+        1.3,
+        text_color,
     );
     out.push_str("</g>");
 }

@@ -127,6 +127,19 @@ pub fn respond(
     body: &[u8],
     head: bool,
 ) -> io::Result<()> {
+    if !matches!(
+        content_type,
+        "text/plain; charset=utf-8"
+            | "text/html; charset=utf-8"
+            | "text/javascript; charset=utf-8"
+            | "text/css; charset=utf-8"
+            | "application/json"
+    ) {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            "unsupported response MIME type",
+        ));
+    }
     stream.set_write_timeout(Some(Duration::from_millis(500)))?;
     let reason = match status {
         200 => "OK",

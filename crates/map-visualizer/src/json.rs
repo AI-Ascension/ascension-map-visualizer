@@ -8,6 +8,41 @@ const MAX_BYTES: usize = 2 * 1024 * 1024;
 const MAX_DEPTH: u8 = 24;
 const MAX_COLLECTION: usize = 8192;
 
+/// Sorted-key UTF-8 JSON with finite integers only. This is the artifact
+/// contract's canonical form, not a general RFC 8785 implementation.
+pub fn canonical(value: &Value) -> Result<Vec<u8>, &'static str> {
+    fn normalize(value: &Value) -> Result<Value, &'static str> {
+        Ok(match value {
+            Value::Number(number) if !number.is_i64() && !number.is_u64() => {
+                return Err("non-integral artifact number");
+            }
+            Value::Array(values) => {
+                Value::Array(values.iter().map(normalize).collect::<Result<_, _>>()?)
+            }
+            Value::Object(values) => {
+                let sorted: std::collections::BTreeMap<_, _> = values.iter().collect();
+                let mut object = Map::new();
+                for (key, value) in sorted {
+                    object.insert(key.clone(), normalize(value)?);
+                }
+                Value::Object(object)
+            }
+            other => other.clone(),
+        })
+    }
+    serde_json::to_vec(&normalize(value)?).map_err(|_| "artifact serialization failed")
+}
+
+pub fn content_digest(value: &Value, field: &str) -> Result<String, &'static str> {
+    let mut value = value.clone();
+    let object = value.as_object_mut().ok_or("artifact object required")?;
+    if !object.get(field).is_some_and(Value::is_string) {
+        return Err("artifact digest field missing");
+    }
+    object.insert(field.to_owned(), Value::String(String::new()));
+    Ok(crate::digest::sha256(&canonical(&value)?))
+}
+
 pub fn decode(bytes: &[u8], limit: usize) -> Result<Value, &'static str> {
     if limit > MAX_BYTES || bytes.len() > limit {
         return Err("JSON byte limit exceeded");

@@ -8,23 +8,6 @@ use std::sync::{
     atomic::{AtomicBool, Ordering},
 };
 
-struct Fixture;
-impl Source for Fixture {
-    fn current(&self) -> Result<Vec<u8>, &'static str> {
-        Ok(br#"{"fixture":"complete"}"#.to_vec())
-    }
-    fn replay(&self) -> Result<Vec<u8>, &'static str> {
-        Ok(b"[]".to_vec())
-    }
-    fn frame(&self, id: &str) -> Result<Vec<u8>, &'static str> {
-        if id == "recorded" {
-            Ok(b"{}".to_vec())
-        } else {
-            Err("missing")
-        }
-    }
-}
-
 fn request(port: u16, path: &str, extra: &str) -> String {
     let mut stream = TcpStream::connect(("127.0.0.1", port)).unwrap();
     stream
@@ -48,7 +31,7 @@ fn actual_loopback_server_has_only_fixed_read_routes_and_origin_fences() {
     let shutdown = Arc::clone(&stop);
     let worker = std::thread::spawn(move || {
         server.run(
-            Arc::new(Fixture),
+            Arc::new(Source::new()),
             Arc::new(Assets {
                 html: b"offline".to_vec(),
                 script: b"/* owned */".to_vec(),
@@ -58,9 +41,9 @@ fn actual_loopback_server_has_only_fixed_read_routes_and_origin_fences() {
         )
     });
     let current = request(port, "/api/current", "");
-    assert!(current.starts_with("HTTP/1.1 200"));
+    assert!(current.starts_with("HTTP/1.1 503"));
     assert!(current.contains("Content-Security-Policy:"));
-    assert!(current.ends_with(r#"{"fixture":"complete"}"#));
+    assert!(request(port, "/api/replay", "").ends_with("[]"));
     assert!(
         request(
             port,
@@ -77,7 +60,7 @@ fn actual_loopback_server_has_only_fixed_read_routes_and_origin_fences() {
     ] {
         assert!(request(port, path, "").starts_with("HTTP/1.1 404"));
     }
-    assert!(request(port, "/api/frame/recorded", "").starts_with("HTTP/1.1 200"));
+    assert!(request(port, "/api/frame/recorded", "").starts_with("HTTP/1.1 503"));
     assert!(request(port, "/api/frame/%2e%2e", "").starts_with("HTTP/1.1 400"));
     assert!(!current.contains("Access-Control-Allow-Origin"));
     stop.store(true, Ordering::Release);

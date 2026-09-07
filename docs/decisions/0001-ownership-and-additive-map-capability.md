@@ -23,3 +23,23 @@ Producer and protocol changes precede gateway/MCP admission; the harness enables
 ## Evidence
 
 The baseline pins are in `../BASELINE_COMMITS.json`; the complete required gates are in `../acceptance.json`. Implementation issues are visualizer #1, protocol #17, game-mod #51, gateway #18, MCP #23 and harness #32. These issue references authorize implementation scope and do not prove completed contracts, native behavior or provider delivery.
+
+## Dependency graph
+
+```mermaid
+flowchart LR
+  P[Protocol contract and exact revision] --> M[Mod permitted projection]
+  P --> G[Gateway fixed fenced read]
+  M --> G
+  G --> C[MCP map capability]
+  C --> H[Harness validation and analysis]
+  H --> B[Atomic bundle and feed]
+  B --> V[Visualizer and offline replay]
+  V --> I[Matching PNG artifact]
+  H --> A[Reviewed provider request]
+  I --> A
+  A --> D[Fresh legal dispatch through existing MCP path]
+  D --> W[Host settlement and fresh observation]
+```
+
+The provider bridge's map process uses the same admitted executable configuration and authority as the legacy gameplay process, with an explicit additive profile. It does not add a direct gateway/mod client. PNG generation uses the official visualizer CLI and is independently bounded and validated. Map reads and images never witness the dispatch effect.

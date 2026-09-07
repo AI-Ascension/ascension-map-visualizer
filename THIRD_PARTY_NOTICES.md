@@ -11,6 +11,7 @@ Direct runtime dependencies are pinned in `Cargo.toml` and resolved in `Cargo.lo
 | serde_json 1.0.151 | MIT OR Apache-2.0 | Bounded JSON adapters |
 | sha2 0.11.0 | MIT OR Apache-2.0 | Content digests |
 | cap-std 4.0.3 | Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT | Filesystem confinement by directory capability |
+| jsonschema 0.52.1 | MIT | Validation against pinned inert owner schemas; remote/file resolution disabled |
 
 `resvg` has no default features enabled: system fonts, font memory mapping, SVGZ and external raster-image decoders are excluded. Only internally generated SVG reaches the rasterizer. Its transitive `usvg`, `tiny-skia`, PNG and geometry dependencies retain their upstream notices.
 

@@ -1,0 +1,95 @@
+{
+  "schema": "orchestration-evidence-v1",
+  "requested": {
+    "model": "gpt-5.6-luna",
+    "effort": "max",
+    "descendant_layers": 3,
+    "ceiling": 12
+  },
+  "root_observed": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "low"
+  },
+  "accepted": {
+    "explicit_spawn_settings": "gpt-5.6-luna / max",
+    "spawn_count": 8
+  },
+  "observed": [
+    {
+      "agent_path": "/root/browser_product",
+      "parent": "root",
+      "depth": 1,
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "max",
+      "metadata_source": "independent installed-client thread metadata"
+    },
+    {
+      "agent_path": "/root/contracts_lead",
+      "parent": "root",
+      "depth": 1,
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "max",
+      "metadata_source": "independent installed-client thread metadata"
+    },
+    {
+      "agent_path": "/root/harness_lead",
+      "parent": "root",
+      "depth": 1,
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "max",
+      "metadata_source": "independent installed-client thread metadata"
+    },
+    {
+      "agent_path": "/root/host_lead",
+      "parent": "root",
+      "depth": 1,
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "max",
+      "metadata_source": "independent installed-client thread metadata"
+    },
+    {
+      "agent_path": "/root/oracle_verifier",
+      "parent": "root",
+      "depth": 1,
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "max",
+      "metadata_source": "independent installed-client thread metadata"
+    },
+    {
+      "agent_path": "/root/product_security",
+      "parent": "root",
+      "depth": 1,
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "max",
+      "metadata_source": "independent installed-client thread metadata"
+    },
+    {
+      "agent_path": "/root/provider_runtime",
+      "parent": "root",
+      "depth": 1,
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "max",
+      "metadata_source": "independent installed-client thread metadata"
+    },
+    {
+      "agent_path": "/root/transport",
+      "parent": "root",
+      "depth": 1,
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "max",
+      "metadata_source": "independent installed-client thread metadata"
+    }
+  ],
+  "nesting": {
+    "status": "blocked",
+    "reason": "Luna child tool surface exposes no delegation operation",
+    "maximum_observed_descendant_depth": 1
+  },
+  "concurrency": {
+    "project_ceiling": 12,
+    "peak_observed_open_descendants": 8,
+    "reservation_registry": "private root-owned atomic ledger"
+  },
+  "project_config": "supported keys parsed; project trust layer disabled for current session; no effective reload claimed",
+  "complete": false
+}

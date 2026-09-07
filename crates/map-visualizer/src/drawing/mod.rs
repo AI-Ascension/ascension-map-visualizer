@@ -30,6 +30,7 @@ pub fn render(map: &Map, settings: Settings) -> Result<Rendered, Error> {
     let tree = resvg::usvg::Tree::from_data(&svg, &options).map_err(|_| Error::Rasterization)?;
     let mut pixels =
         resvg::tiny_skia::Pixmap::new(settings.width, settings.height).ok_or(Error::PixelLimit)?;
+    pixels.fill(resvg::tiny_skia::Color::from_rgba8(23, 26, 30, 255));
     resvg::render(
         &tree,
         resvg::tiny_skia::Transform::identity(),

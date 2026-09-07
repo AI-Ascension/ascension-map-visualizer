@@ -7,43 +7,77 @@
       "id": "A",
       "requirement": "Runtime preflight and repository discovery",
       "status": "in_progress",
-      "evidence": []
+      "evidence": [
+        "docs/IMPLEMENTATION_STATUS.md",
+        "docs/REQUIREMENTS.md"
+      ]
     },
     {
       "id": "B",
       "requirement": "Ownership versioned contracts and fixtures",
-      "status": "unverified",
-      "evidence": []
+      "status": "in_progress",
+      "evidence": [
+        "docs/IMPLEMENTATION_STATUS.md",
+        "docs/REQUIREMENTS.md"
+      ]
     },
     {
       "id": "C",
       "requirement": "Native projection and fenced transport",
-      "status": "unverified",
-      "evidence": []
+      "status": "in_progress",
+      "evidence": [
+        "docs/IMPLEMENTATION_STATUS.md",
+        "docs/REQUIREMENTS.md"
+      ]
     },
     {
       "id": "D",
       "requirement": "Harness provider delivery and viewer",
-      "status": "unverified",
-      "evidence": []
+      "status": "in_progress",
+      "evidence": [
+        "docs/IMPLEMENTATION_STATUS.md",
+        "docs/REQUIREMENTS.md"
+      ]
     },
     {
       "id": "E",
       "requirement": "Integration offline packaging observability",
-      "status": "unverified",
-      "evidence": []
+      "status": "in_progress",
+      "evidence": [
+        "docs/IMPLEMENTATION_STATUS.md",
+        "docs/REQUIREMENTS.md"
+      ]
     },
     {
       "id": "F",
       "requirement": "Native provider validation and evaluation",
-      "status": "unverified",
-      "evidence": []
+      "status": "in_progress",
+      "evidence": [
+        "docs/IMPLEMENTATION_STATUS.md",
+        "docs/REQUIREMENTS.md"
+      ]
     },
     {
       "id": "G",
       "requirement": "Independent review repair and handoff",
-      "status": "unverified",
-      "evidence": []
+      "status": "in_progress",
+      "evidence": [
+        "docs/IMPLEMENTATION_STATUS.md",
+        "docs/REQUIREMENTS.md"
+      ]
     }
-  ]
+  ],
+  "capability_blockers": [
+    {
+      "requirement": "three genuine descendant layers",
+      "status": "blocked",
+      "reason": "Child tool surface has no delegation operation; eight Luna/max descendants are observed at depth one."
+    }
+  ],
+  "live_status": {
+    "host_map_snapshot": "unverified",
+    "provider_graph_image_input": "unverified",
+    "settled_map_action": "unverified",
+    "game_or_provider_launched": false
+  }
 }

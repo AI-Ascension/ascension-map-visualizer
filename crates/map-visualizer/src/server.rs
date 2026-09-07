@@ -11,11 +11,7 @@ use std::sync::{
 use std::thread::{self, JoinHandle};
 use std::time::Duration;
 
-pub trait Source: Send + Sync + 'static {
-    fn current(&self) -> Result<Vec<u8>, &'static str>;
-    fn replay(&self) -> Result<Vec<u8>, &'static str>;
-    fn frame(&self, id: &str) -> Result<Vec<u8>, &'static str>;
-}
+pub use crate::source::Source;
 
 pub struct Assets {
     pub html: Vec<u8>,
@@ -42,7 +38,7 @@ impl Server {
 
     pub fn run(
         self,
-        source: Arc<dyn Source>,
+        source: Arc<Source>,
         assets: Arc<Assets>,
         stop: Arc<AtomicBool>,
     ) -> io::Result<()> {
@@ -76,7 +72,7 @@ impl Server {
                     let assets = Arc::clone(&assets);
                     let port = self.port;
                     workers.push(thread::spawn(move || {
-                        handle(socket, port, &*source, &assets)
+                        handle(socket, port, &source, &assets)
                     }));
                 }
                 Err(error) if error.kind() == io::ErrorKind::WouldBlock => {
@@ -98,7 +94,7 @@ impl Server {
     }
 }
 
-fn handle(mut socket: TcpStream, port: u16, source: &dyn Source, assets: &Assets) {
+fn handle(mut socket: TcpStream, port: u16, source: &Source, assets: &Assets) {
     let request = match http::read_request(&mut socket, port) {
         Ok(request) => request,
         Err(rejection) => {

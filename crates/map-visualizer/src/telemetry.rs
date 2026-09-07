@@ -222,7 +222,8 @@ fn encode(event: Event) -> Option<Vec<u8>> {
         attributes.push(json!({"key":key,"value":{"boolValue":value}}));
     }
     if let Some(id) = event.trajectory_id {
-        attributes.push(json!({"key":"sts2.trajectory_id","value":{"stringValue":id}}));
+        let lineage = crate::digest::sha256(format!("ascension-map-trajectory-v1:{id}").as_bytes());
+        attributes.push(json!({"key":"sts2.trajectory_digest","value":{"stringValue":lineage}}));
     }
     let body = json!({"resourceSpans":[{"resource":{"attributes":[{"key":"service.name","value":{"stringValue":"ascension-map-visualizer"}}]},"scopeSpans":[{"scope":{"name":"ascension-map","version":"1"},"spans":[{"traceId":&hash[..32],"spanId":&hash[32..48],"name":format!("map.{}",event.stage.name()),"kind":1,"startTimeUnixNano":start.to_string(),"endTimeUnixNano":end.to_string(),"attributes":attributes}]}]}]});
     let bytes = serde_json::to_vec(&body).ok()?;

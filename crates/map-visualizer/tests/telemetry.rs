@@ -64,6 +64,8 @@ fn actual_otlp_request_contains_only_bounded_metrics_and_sanitized_lineage() {
     let text = String::from_utf8(bytes).unwrap();
     assert!(text.starts_with("POST /v1/traces HTTP/1.1"));
     assert!(!text.contains("Authorization"));
+    assert!(!text.contains("synthetic-trajectory"));
+    assert!(text.contains("sts2.trajectory_digest"));
     let body: serde_json::Value =
         serde_json::from_str(text.split_once("\r\n\r\n").unwrap().1).unwrap();
     let span = &body["resourceSpans"][0]["scopeSpans"][0]["spans"][0];
