@@ -1,0 +1,13 @@
+{
+  "name": "ascension-map-visualizer",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Read-only browser verification for the Ascension map viewer",
+  "scripts": {
+    "test:browser": "playwright test",
+    "test": "npm run test:browser"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.55.0"
+  }
+}

@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="color-scheme" content="dark">
+  <title>Ascension Map Viewer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#map-workspace">Skip to map workspace</a>
+  <header class="topbar">
+    <div class="brand-lockup">
+      <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div>
+        <p class="brand-kicker">AI-ASCENSION / READ ONLY</p>
+        <h1>Map viewer</h1>
+      </div>
+    </div>
+    <div class="topbar-status" aria-live="polite">
+      <span id="connection-badge" class="status-badge status-offline">Offline</span>
+      <span id="map-status-badge" class="status-badge status-neutral">No map loaded</span>
+      <span id="bundle-label" class="bundle-label">Awaiting viewer.json</span>
+    </div>
+  </header>
+
+  <main id="map-workspace" class="workspace">
+    <section class="toolbar" aria-label="Map controls">
+      <div class="toolbar-group toolbar-group-primary">
+        <button type="button" class="toolbar-button button-accent" data-action="fit" title="Fit the complete graph (0)">
+          <span class="button-glyph" aria-hidden="true">⌗</span>
+          <span>Fit map</span>
+        </button>
+        <button type="button" class="toolbar-button" data-action="zoom-out" title="Zoom out (-)" aria-label="Zoom out">−</button>
+        <output id="zoom-readout" class="zoom-readout" aria-label="Zoom level">100%</output>
+        <button type="button" class="toolbar-button" data-action="zoom-in" title="Zoom in (+)" aria-label="Zoom in">+</button>
+      </div>
+      <div class="toolbar-divider" aria-hidden="true"></div>
+      <label class="search-field">
+        <span class="sr-only">Search canonical ID or display alias</span>
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input id="node-search" type="search" autocomplete="off" placeholder="Search node ID or alias" spellcheck="false">
+        <kbd>/</kbd>
+      </label>
+      <div id="search-results" class="search-results" role="listbox" aria-label="Search results" hidden></div>
+      <div class="toolbar-spacer"></div>
+      <label class="file-button toolbar-button" title="Open a validated viewer.json artifact">
+        <span class="button-glyph" aria-hidden="true">↥</span>
+        <span>Open artifact</span>
+        <input id="artifact-file" type="file" accept="application/json,.json" aria-label="Open viewer JSON artifact">
+      </label>
+      <button type="button" class="toolbar-button" data-action="example" title="Load the bundled synthetic example">Example</button>
+    </section>
+
+    <div id="notice-region" class="notice-region" aria-live="polite" aria-atomic="true"></div>
+
+    <section class="content-grid">
+      <div class="map-column">
+        <div class="map-toolbar-row">
+          <div class="scope-label">
+            <span class="scope-dot" aria-hidden="true"></span>
+            <span id="scope-label">No presentation loaded</span>
+          </div>
+          <div class="map-toolbar-actions">
+            <button type="button" class="quiet-button" data-action="reset-selection">Clear selection</button>
+            <button type="button" class="quiet-button" data-action="help">Keyboard guide</button>
+          </div>
+        </div>
+        <div id="map-stage" class="map-stage" tabindex="0" aria-label="Map graph. Use Tab to inspect nodes and edges; use arrow keys to move between connected nodes.">
+          <svg id="map-svg" class="map-svg" viewBox="0 0 1200 780" role="img" aria-labelledby="map-title map-description" preserveAspectRatio="xMidYMid meet">
+            <title id="map-title">Ascension map graph</title>
+            <desc id="map-description">A complete read-only map graph. Load a viewer artifact to inspect its nodes and edges.</desc>
+            <defs>
+              <marker id="arrow-default" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+                <path d="M0,0 L8,4 L0,8 Z" fill="currentColor"></path>
+              </marker>
+              <marker id="arrow-selected" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto" markerUnits="userSpaceOnUse">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="currentColor"></path>
+              </marker>
+            </defs>
+            <rect class="map-background" x="0" y="0" width="1200" height="780"></rect>
+            <g id="map-content" aria-live="off">
+              <g id="edge-layer" aria-label="Map connections"></g>
+              <g id="node-layer" aria-label="Map nodes"></g>
+            </g>
+          </svg>
+          <div id="empty-state" class="empty-state">
+            <div class="empty-glyph" aria-hidden="true"><span></span><span></span><span></span></div>
+            <p class="eyebrow">Presentation artifact</p>
+            <h2>Open a complete map</h2>
+            <p>Choose a generated <code>viewer.json</code> file to inspect every visible node and connection in one view.</p>
+            <button type="button" class="button-accent empty-action" data-action="example">Load synthetic example</button>
+          </div>
+          <div class="map-hud map-hud-top-left" aria-hidden="true">
+            <span>FULL TOPOLOGY</span>
+            <span class="hud-separator"></span>
+            <span id="graph-count">0 nodes · 0 edges</span>
+          </div>
+          <div class="map-hud map-hud-bottom-left" aria-hidden="true">
+            <span>Drag to pan</span><span class="hud-separator"></span><span>Wheel to zoom</span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="inspector-column" aria-label="Map context">
+        <section class="overview-panel panel-section">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Orientation</p>
+              <h2>Overview</h2>
+            </div>
+            <span id="overview-scale" class="panel-meta">Fit</span>
+          </div>
+          <div class="overview-frame">
+            <svg id="overview-svg" class="overview-svg" viewBox="0 0 1200 780" aria-label="Persistent whole-map overview">
+              <rect class="overview-background" x="0" y="0" width="1200" height="780"></rect>
+              <g id="overview-content"></g>
+              <rect id="overview-viewport" class="overview-viewport" x="0" y="0" width="1200" height="780"></rect>
+            </svg>
+          </div>
+          <p id="overview-note" class="muted-copy">Whole-map orientation stays visible while you inspect details.</p>
+        </section>
+
+        <section class="inspector-panel panel-section">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Selection</p>
+              <h2 id="inspector-heading">Nothing selected</h2>
+            </div>
+            <span class="inspect-only-label">INSPECT ONLY</span>
+          </div>
+          <div id="inspector-body" class="inspector-body">
+            <p class="muted-copy">Select a node or directional connection to see its recorded facts. Viewer selections never dispatch game actions.</p>
+          </div>
+        </section>
+
+        <section class="context-panel panel-section">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Emphasis</p>
+              <h2>Overlays</h2>
+            </div>
+            <span class="panel-meta">Base graph stays</span>
+          </div>
+          <div id="overlay-controls" class="overlay-controls">
+            <button type="button" class="overlay-toggle is-on" data-overlay="legal" aria-pressed="true"><span class="toggle-mark" aria-hidden="true"></span><span>Immediate legal moves</span></button>
+            <button type="button" class="overlay-toggle is-on" data-overlay="reachable" aria-pressed="true"><span class="toggle-mark" aria-hidden="true"></span><span>Downstream reachable</span></button>
+            <button type="button" class="overlay-toggle" data-overlay="visited" aria-pressed="false"><span class="toggle-mark" aria-hidden="true"></span><span>Visited history</span></button>
+            <button type="button" class="overlay-toggle is-on" data-overlay="routes" aria-pressed="true"><span class="toggle-mark" aria-hidden="true"></span><span>Candidate routes</span></button>
+          </div>
+          <p class="muted-copy overlay-note">Emphasis changes opacity and annotations; it never filters the declared topology.</p>
+        </section>
+
+        <section class="legend-panel panel-section">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Reading the map</p>
+              <h2>Legend</h2>
+            </div>
+          </div>
+          <div class="legend-grid">
+            <span class="legend-item"><span class="legend-symbol legend-current" aria-hidden="true"></span>Current</span>
+            <span class="legend-item"><span class="legend-symbol legend-legal" aria-hidden="true"></span>Legal next move</span>
+            <span class="legend-item"><span class="legend-symbol legend-visited" aria-hidden="true"></span>Visited</span>
+            <span class="legend-item"><span class="legend-symbol legend-unknown" aria-hidden="true">?</span>Unknown</span>
+            <span class="legend-item"><span class="legend-symbol legend-edge" aria-hidden="true"></span>Directed edge</span>
+            <span class="legend-item"><span class="legend-symbol legend-route" aria-hidden="true"></span>Candidate route</span>
+          </div>
+        </section>
+
+        <section class="replay-panel panel-section">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Recorded frames</p>
+              <h2>Replay</h2>
+            </div>
+            <span id="replay-count" class="panel-meta">No frames</span>
+          </div>
+          <div class="replay-controls">
+            <button type="button" class="quiet-button" data-action="replay-prev" aria-label="Previous replay frame">←</button>
+            <select id="replay-select" aria-label="Select a recorded replay frame">
+              <option value="">No replay frames</option>
+            </select>
+            <button type="button" class="quiet-button" data-action="replay-next" aria-label="Next replay frame">→</button>
+          </div>
+          <p id="replay-note" class="muted-copy">Historical frames retain the knowledge and authorization available at that decision.</p>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <dialog id="keyboard-dialog" class="keyboard-dialog">
+    <div class="dialog-heading"><div><p class="eyebrow">Navigation</p><h2>Keyboard guide</h2></div><button type="button" class="quiet-button" data-action="close-help" aria-label="Close keyboard guide">Close</button></div>
+    <dl class="shortcut-list">
+      <div><dt><kbd>0</kbd></dt><dd>Fit the complete graph</dd></div>
+      <div><dt><kbd>+</kbd> <kbd>−</kbd></dt><dd>Zoom in or out</dd></div>
+      <div><dt><kbd>Tab</kbd></dt><dd>Move between graph elements</dd></div>
+      <div><dt><kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd></dt><dd>Move from the selected node through connected nodes</dd></div>
+      <div><dt><kbd>Enter</kbd></dt><dd>Inspect the focused node or edge</dd></div>
+      <div><dt><kbd>Esc</kbd></dt><dd>Clear selection and search</dd></div>
+    </dl>
+  </dialog>
+
+  <footer class="footer-bar">
+    <span>Viewer payload v1</span><span class="footer-dot">•</span><span>Graph data is presentation-only</span><span class="footer-spacer"></span><span id="validation-label">Awaiting validation</span>
+  </footer>
+  <script src="app.js" defer></script>
+</body>
+</html>

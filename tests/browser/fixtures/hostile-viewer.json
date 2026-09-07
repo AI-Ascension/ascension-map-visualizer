@@ -1,0 +1,20 @@
+{
+  "schema": "ascension-map-viewer-v1",
+  "bundle_id": "fixture-hostile",
+  "snapshot_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "analysis_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "map": {
+    "identity": "<img src=x onerror=alert(1)>",
+    "status": "AVAILABLE / COMPLETE / CURRENT",
+    "nodes": [
+      {"id":"<svg/onload=alert(1)>","floor":0,"lane":0,"category":"unknown","current":true,"legal":true,"reachable":true,"visited":false}
+    ],
+    "edges": []
+  },
+  "aliases": {"<svg/onload=alert(1)>":"<script>alert(1)</script>"},
+  "candidates": [],
+  "historical": false,
+  "complete": true,
+  "available": true,
+  "warnings": ["<img src=x onerror=alert(1)>"]
+}
