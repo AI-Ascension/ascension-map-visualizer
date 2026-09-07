@@ -2,3 +2,6 @@
 /.orchestration/
 /artifacts/
 /node_modules/
+
+# Generated output of the pinned standards tool only.
+standards/tools/standards-sync/target/
