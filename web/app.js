@@ -4,6 +4,7 @@
 
   var SVG_NS = "http://www.w3.org/2000/svg";
   var VIEWBOX = { width: 1200, height: 780 };
+  var COMPACT_VIEWBOX_WIDTH = 560;
   var MAX_JSON_BYTES = 2 * 1024 * 1024;
   var MAX_TEXT_BYTES = 512;
   var MAX_NODES = 1024;
@@ -244,8 +245,8 @@
       canonicalText(node.id, "payload.map.nodes[" + index + "].id", false);
       if (nodeIds.has(node.id)) throw new Error("payload.map.nodes contains a duplicate identity");
       nodeIds.add(node.id);
-      integer(node.floor, "payload.map.nodes[" + index + "].floor", -4096, 4096);
-      integer(node.lane, "payload.map.nodes[" + index + "].lane", -4096, 4096);
+      integer(node.floor, "payload.map.nodes[" + index + "].floor", -32768, 32767);
+      integer(node.lane, "payload.map.nodes[" + index + "].lane", -32768, 32767);
       categoryText(node.category, "payload.map.nodes[" + index + "].category");
       bool(node.current, "payload.map.nodes[" + index + "].current");
       bool(node.legal, "payload.map.nodes[" + index + "].legal");
@@ -450,6 +451,16 @@
     return Math.abs(hash);
   }
 
+  function viewWidth() {
+    return state.layout && state.layout.viewWidth ? state.layout.viewWidth : VIEWBOX.width;
+  }
+
+  function updateMapViewBox() {
+    var width = viewWidth();
+    refs.mapSvg.setAttribute("viewBox", "0 0 " + width + " " + VIEWBOX.height);
+    refs.mapBackground.setAttribute("width", String(width));
+  }
+
   function createLayout(payload) {
     var floors = Array.from(new Set(payload.map.nodes.map(function (node) { return node.floor; }))).sort(function (a, b) { return a - b; });
     var lanes = Array.from(new Set(payload.map.nodes.map(function (node) { return node.lane; }))).sort(function (a, b) { return a - b; });
@@ -457,6 +468,10 @@
     var maxFloor = floors.length ? floors[floors.length - 1] : 0;
     var minLane = lanes.length ? lanes[0] : 0;
     var maxLane = lanes.length ? lanes[lanes.length - 1] : 0;
+    var compact = refs.mapStage && refs.mapStage.clientWidth < 560;
+    var layoutWidth = compact ? COMPACT_VIEWBOX_WIDTH : VIEWBOX.width;
+    var horizontalMargin = compact ? 36 : 100;
+    var horizontalSpan = layoutWidth - horizontalMargin * 2;
     var floorRange = Math.max(1, maxFloor - minFloor);
     var laneRange = Math.max(1, maxLane - minLane);
     var positions = new Map();
@@ -468,14 +483,19 @@
     });
     groups.forEach(function (group) {
       group.sort(function (a, b) { return a.id < b.id ? -1 : a.id > b.id ? 1 : 0; });
+      var offsetStep = Math.min(96, 176 / Math.max(1, group.length));
       group.forEach(function (node, index) {
-        var x = 100 + ((node.lane - minLane) / laneRange) * 1000;
+        var x = horizontalMargin + ((node.lane - minLane) / laneRange) * horizontalSpan;
         var y = 690 - ((node.floor - minFloor) / floorRange) * 600;
-        var offset = (index - (group.length - 1) / 2) * Math.min(64, 96 / Math.max(1, group.length));
+        var offset = (index - (group.length - 1) / 2) * offsetStep;
         positions.set(node.id, { x: x + offset, y: y + Math.abs(offset) * 0.1 });
       });
     });
-    return { positions: positions, floors: floors, bounds: { minX: 72, minY: 52, maxX: 1128, maxY: 728 } };
+    return { positions: positions, floors: floors, viewWidth: layoutWidth, compact: compact, bounds: { minX: horizontalMargin - 28, minY: 52, maxX: layoutWidth - horizontalMargin + 28, maxY: 728 } };
+  }
+
+  function overviewPoint(position) {
+    return { x: position.x * VIEWBOX.width / viewWidth(), y: position.y };
   }
 
   function edgeCurve(edge, index, positions) {
@@ -529,20 +549,20 @@
   function createNodeShape(node, position) {
     var category = categoryClass(node.category);
     if (category === "elite" || category === "treasure") {
-      return makeSvg("polygon", { class: "node-shape", points: [position.x + "," + (position.y - 14), (position.x + 14) + "," + position.y, position.x + "," + (position.y + 14), (position.x - 14) + "," + position.y].join(" ") });
+      return makeSvg("polygon", { class: "node-shape", points: [position.x + "," + (position.y - 18), (position.x + 18) + "," + position.y, position.x + "," + (position.y + 18), (position.x - 18) + "," + position.y].join(" ") });
     }
     if (category === "shop" || category === "merchant" || category === "rest") {
-      return makeSvg("rect", { class: "node-shape", x: position.x - 13, y: position.y - 11, width: 26, height: 22, rx: 5 });
+      return makeSvg("rect", { class: "node-shape", x: position.x - 16, y: position.y - 13, width: 32, height: 26, rx: 6 });
     }
     if (category === "event" || category === "mystery") {
       var points = [];
       for (var index = 0; index < 6; index += 1) {
         var angle = Math.PI / 6 + index * Math.PI / 3;
-        points.push((position.x + Math.cos(angle) * 14).toFixed(2) + "," + (position.y + Math.sin(angle) * 14).toFixed(2));
+        points.push((position.x + Math.cos(angle) * 18).toFixed(2) + "," + (position.y + Math.sin(angle) * 18).toFixed(2));
       }
       return makeSvg("polygon", { class: "node-shape", points: points.join(" ") });
     }
-    return makeSvg("circle", { class: "node-shape", cx: position.x, cy: position.y, r: category === "boss" ? 16 : 13 });
+    return makeSvg("circle", { class: "node-shape", cx: position.x, cy: position.y, r: category === "boss" ? 21 : 18 });
   }
 
   function renderGraph() {
@@ -595,8 +615,8 @@
       if (isNodeDimmed(node)) group.classList.add("is-dimmed");
       group.appendChild(createNodeShape(node, position));
       if (category === "unknown" || node.category.toLowerCase() === "unknown") group.appendChild(makeSvg("text", { class: "node-unknown-mark", x: position.x, y: position.y + 1 }, "?"));
-      group.appendChild(makeSvg("text", { class: "node-label", x: position.x, y: position.y + 31 }, alias));
-      group.appendChild(makeSvg("text", { class: "node-category-label", x: position.x, y: position.y + 44 }, categoryLabel(node.category)));
+      group.appendChild(makeSvg("text", { class: "node-label", x: position.x, y: position.y + 39 }, alias));
+      group.appendChild(makeSvg("text", { class: "node-category-label", x: position.x, y: position.y + 53 }, categoryLabel(node.category)));
       var title = makeSvg("title", {}, alias + " · " + node.id);
       group.insertBefore(title, group.firstChild);
       group.addEventListener("pointerdown", function (event) { event.stopPropagation(); });
@@ -616,11 +636,11 @@
     }
     var positions = state.layout.positions;
     state.payload.map.edges.forEach(function (edge) {
-      var from = positions.get(edge.from); var to = positions.get(edge.to);
+      var from = overviewPoint(positions.get(edge.from)); var to = overviewPoint(positions.get(edge.to));
       refs.overviewContent.appendChild(makeSvg("line", { class: "overview-line", x1: from.x, y1: from.y, x2: to.x, y2: to.y }));
     });
     state.payload.map.nodes.forEach(function (node) {
-      var position = positions.get(node.id);
+      var position = overviewPoint(positions.get(node.id));
       var circle = makeSvg("circle", { class: "overview-node " + (node.current ? "overview-current" : node.legal ? "overview-legal" : "overview-normal"), cx: position.x, cy: position.y, r: node.current ? 8 : 5 });
       refs.overviewContent.appendChild(circle);
     });
@@ -628,11 +648,14 @@
   }
 
   function updateOverviewViewport() {
-    var width = VIEWBOX.width / state.zoom;
+    var mapWidth = viewWidth();
+    var width = mapWidth / state.zoom;
     var height = VIEWBOX.height / state.zoom;
-    refs.overviewViewport.setAttribute("x", Math.max(0, Math.min(VIEWBOX.width - width, -state.pan.x / state.zoom)));
+    var x = Math.max(0, Math.min(mapWidth - width, -state.pan.x / state.zoom));
+    var overviewScaleX = VIEWBOX.width / mapWidth;
+    refs.overviewViewport.setAttribute("x", x * overviewScaleX);
     refs.overviewViewport.setAttribute("y", Math.max(0, Math.min(VIEWBOX.height - height, -state.pan.y / state.zoom)));
-    refs.overviewViewport.setAttribute("width", Math.min(VIEWBOX.width, width));
+    refs.overviewViewport.setAttribute("width", Math.min(mapWidth, width) * overviewScaleX);
     refs.overviewViewport.setAttribute("height", Math.min(VIEWBOX.height, height));
     refs.overviewScale.textContent = Math.round(state.zoom * 100) + "%";
   }
@@ -647,7 +670,7 @@
 
   function zoomAt(nextZoom, clientX, clientY) {
     var rect = refs.mapSvg.getBoundingClientRect();
-    var x = ((clientX - rect.left) / Math.max(1, rect.width)) * VIEWBOX.width;
+    var x = ((clientX - rect.left) / Math.max(1, rect.width)) * viewWidth();
     var y = ((clientY - rect.top) / Math.max(1, rect.height)) * VIEWBOX.height;
     var oldZoom = state.zoom;
     state.zoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, nextZoom));
@@ -862,6 +885,7 @@
     state.source = source;
     state.historicalOverride = Boolean(historicalOverride);
     state.layout = createLayout(payload);
+    updateMapViewBox();
     if (identityChanged) {
       state.selected = null;
       state.zoom = 1;
@@ -957,7 +981,7 @@
 
   function initReferences() {
     refs.connectionBadge = byId("connection-badge"); refs.mapStatusBadge = byId("map-status-badge"); refs.bundleLabel = byId("bundle-label"); refs.scopeLabel = byId("scope-label"); refs.validationLabel = byId("validation-label");
-    refs.noticeRegion = byId("notice-region"); refs.mapStage = byId("map-stage"); refs.mapSvg = byId("map-svg"); refs.mapContent = byId("map-content"); refs.edgeLayer = byId("edge-layer"); refs.nodeLayer = byId("node-layer"); refs.emptyState = byId("empty-state"); refs.graphCount = byId("graph-count"); refs.zoomReadout = byId("zoom-readout");
+    refs.noticeRegion = byId("notice-region"); refs.mapStage = byId("map-stage"); refs.mapSvg = byId("map-svg"); refs.mapBackground = refs.mapSvg.querySelector(".map-background"); refs.mapContent = byId("map-content"); refs.edgeLayer = byId("edge-layer"); refs.nodeLayer = byId("node-layer"); refs.emptyState = byId("empty-state"); refs.graphCount = byId("graph-count"); refs.zoomReadout = byId("zoom-readout");
     refs.overviewContent = byId("overview-content"); refs.overviewViewport = byId("overview-viewport"); refs.overviewScale = byId("overview-scale"); refs.overviewNote = byId("overview-note"); refs.inspectorHeading = byId("inspector-heading"); refs.inspectorBody = byId("inspector-body"); refs.search = byId("node-search"); refs.searchResults = byId("search-results"); refs.artifactFile = byId("artifact-file"); refs.replaySelect = byId("replay-select"); refs.replayCount = byId("replay-count"); refs.replayNote = byId("replay-note"); refs.keyboardDialog = byId("keyboard-dialog");
   }
 
@@ -993,7 +1017,7 @@
     refs.replaySelect.addEventListener("change", function () { if (refs.replaySelect.value === "") { leaveReplay(); return; } loadReplayFrame(Number(refs.replaySelect.value)); });
     refs.mapSvg.addEventListener("wheel", function (event) { event.preventDefault(); zoomAt(state.zoom * (event.deltaY < 0 ? 1.12 : 0.89), event.clientX, event.clientY); }, { passive: false });
     refs.mapSvg.addEventListener("pointerdown", function (event) { if (event.button !== 0 && event.pointerType !== "touch") return; state.drag.active = true; state.drag.moved = false; state.drag.x = event.clientX; state.drag.y = event.clientY; refs.mapSvg.classList.add("is-dragging"); refs.mapSvg.setPointerCapture(event.pointerId); });
-    refs.mapSvg.addEventListener("pointermove", function (event) { if (!state.drag.active) return; var rect = refs.mapSvg.getBoundingClientRect(); var dx = event.clientX - state.drag.x; var dy = event.clientY - state.drag.y; if (Math.abs(dx) + Math.abs(dy) > 3) state.drag.moved = true; state.pan.x += dx / Math.max(1, rect.width) * VIEWBOX.width; state.pan.y += dy / Math.max(1, rect.height) * VIEWBOX.height; state.drag.x = event.clientX; state.drag.y = event.clientY; applyTransform(); });
+    refs.mapSvg.addEventListener("pointermove", function (event) { if (!state.drag.active) return; var rect = refs.mapSvg.getBoundingClientRect(); var dx = event.clientX - state.drag.x; var dy = event.clientY - state.drag.y; if (Math.abs(dx) + Math.abs(dy) > 3) state.drag.moved = true; state.pan.x += dx / Math.max(1, rect.width) * viewWidth(); state.pan.y += dy / Math.max(1, rect.height) * VIEWBOX.height; state.drag.x = event.clientX; state.drag.y = event.clientY; applyTransform(); });
     refs.mapSvg.addEventListener("pointerup", function (event) { state.drag.active = false; refs.mapSvg.classList.remove("is-dragging"); if (refs.mapSvg.hasPointerCapture(event.pointerId)) refs.mapSvg.releasePointerCapture(event.pointerId); window.setTimeout(function () { state.drag.moved = false; }, 0); });
     refs.mapSvg.addEventListener("pointercancel", function () { state.drag.active = false; refs.mapSvg.classList.remove("is-dragging"); });
     document.addEventListener("keydown", function (event) {
@@ -1007,6 +1031,14 @@
       if (event.key === "Escape") { state.selected = null; refs.search.value = ""; state.search = ""; renderAll(); }
     });
     refs.mapStage.addEventListener("click", function (event) { if (event.target === refs.mapSvg || event.target === byId("map-background")) { state.selected = null; renderAll(); } });
+    window.addEventListener("resize", function () {
+      if (!state.payload || !state.layout) return;
+      var compact = refs.mapStage.clientWidth < 560;
+      if (compact === state.layout.compact) return;
+      state.layout = createLayout(state.payload);
+      updateMapViewBox();
+      renderAll();
+    });
   }
 
   function startLive() {
