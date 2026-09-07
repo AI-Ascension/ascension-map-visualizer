@@ -1,0 +1,92 @@
+{
+  "schema": "ascension-map-assembly-v1",
+  "assembly_ready": false,
+  "live_verified": false,
+  "repositories": [
+    {
+      "repository": "AI-Ascension/.github",
+      "commit": "0cbdf744d515b16c042eb6e16b1537d8ccf11771",
+      "pull_request": null,
+      "pending_source_changes": false,
+      "evidence_scope": "policy baseline; no change"
+    },
+    {
+      "repository": "AI-Ascension/sts2-game-core",
+      "commit": "87e0f3d9355c0827e989d9fbc31804440852519b",
+      "pull_request": null,
+      "pending_source_changes": false,
+      "evidence_scope": "no domain change required"
+    },
+    {
+      "repository": "AI-Ascension/sts2-protocol",
+      "commit": "d9ffb190ad8990e15f43d7992581dcb2d60b1971",
+      "pull_request": "https://github.com/AI-Ascension/sts2-protocol/pull/18",
+      "pending_source_changes": false,
+      "evidence_scope": "component checks passed"
+    },
+    {
+      "repository": "AI-Ascension/sts2-game-mod",
+      "commit": "4ce632bc10dfcfed4d8eeec449ff4df6048490fb",
+      "pull_request": null,
+      "pending_source_changes": true,
+      "evidence_scope": "pending identity and generation repairs; not an assembly pin"
+    },
+    {
+      "repository": "AI-Ascension/sts2-gateway",
+      "commit": "4b306321f869f0dffb99110cc127dcdac731df4a",
+      "pull_request": "https://github.com/AI-Ascension/sts2-gateway/pull/19",
+      "pending_source_changes": false,
+      "evidence_scope": "component checks passed"
+    },
+    {
+      "repository": "AI-Ascension/sts2-mcp-server",
+      "commit": "0d2035a08cbab9210e89ee0c1adc560fcf47d327",
+      "pull_request": "https://github.com/AI-Ascension/sts2-mcp-server/pull/24",
+      "pending_source_changes": false,
+      "evidence_scope": "component checks passed"
+    },
+    {
+      "repository": "AI-Ascension/sts2-harness",
+      "commit": "9a3a282f5616f09367c449d65b029484baac0509",
+      "pull_request": null,
+      "pending_source_changes": true,
+      "evidence_scope": "pending integration and evaluation repairs; not an assembly pin"
+    },
+    {
+      "repository": "AI-Ascension/ascension-map-visualizer",
+      "commit": "5b1d196480685a313bc2417d5b4450a63cc89ce5",
+      "pull_request": "https://github.com/AI-Ascension/ascension-map-visualizer/pull/2",
+      "pending_source_changes": false,
+      "evidence_scope": "native package source pin; subsequent documentation commit c29d8a8"
+    },
+    {
+      "repository": "AI-Ascension/ai-agent-observability",
+      "commit": "67f455c0d4aa142139b3942ed0ad56138eecbf8b",
+      "pull_request": "https://github.com/AI-Ascension/ai-agent-observability/pull/12",
+      "pending_source_changes": false,
+      "evidence_scope": "documentation and deployment-contract checks only"
+    }
+  ],
+  "contracts": {
+    "protocol_revision": "d9ffb190ad8990e15f43d7992581dcb2d60b1971",
+    "runtime_map_schema_sha256": "6340f3cbe6c1b5728144fe89fdfdf8645acf2f59a77c0e0c30ebfeafc77515d8",
+    "harness_artifact_revision": "3c4470f0940e3668519194e13b59f234e75821a7",
+    "harness_artifact_manifest": "contract-artifacts/harness/provenance.json"
+  },
+  "merge_order": [
+    "sts2-protocol",
+    "sts2-game-mod",
+    "sts2-gateway",
+    "sts2-mcp-server",
+    "sts2-harness",
+    "ascension-map-visualizer",
+    "ai-agent-observability"
+  ],
+  "merge_authorized": false,
+  "release_authorized": false,
+  "blockers": [
+    "Host and harness repairs are not yet committed and validated as one assembly.",
+    "Real provider graph/image delivery and host-settled map action remain unverified.",
+    "Native child delegation is unavailable; three descendant layers remain unverified."
+  ]
+}

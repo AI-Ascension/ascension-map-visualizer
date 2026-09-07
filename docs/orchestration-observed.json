@@ -12,7 +12,7 @@
   },
   "accepted": {
     "explicit_spawn_settings": "gpt-5.6-luna / max",
-    "spawn_count": 11
+    "spawn_count": 12
   },
   "observed": [
     {
@@ -105,6 +105,15 @@
       "reasoning_effort": "max",
       "metadata_source": "independent installed-client thread metadata",
       "phase": "resumed validation"
+    },
+    {
+      "agent_path": "/root/provider_review",
+      "parent": "root",
+      "depth": 1,
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "max",
+      "metadata_source": "independent installed-client thread metadata",
+      "phase": "resumed independent provider review"
     }
   ],
   "nesting": {
@@ -116,8 +125,8 @@
     "project_ceiling": 12,
     "peak_observed_open_descendants": 8,
     "reservation_registry": "private root-owned atomic ledger",
-    "current_open_descendants": 3,
-    "resumption": "Previous native registry contained no descendants before three new bounded tasks were assigned; unused nested reservations were cancelled after capability failure."
+    "current_open_descendants": 4,
+    "resumption": "Previous native registry contained no descendants before resumed bounded tasks were assigned; unused nested reservations were cancelled after capability failure."
   },
   "project_config": "Supported keys parsed; explicit spawn arguments independently observed. No effective project-config reload claimed.",
   "complete": false

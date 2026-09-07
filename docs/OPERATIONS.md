@@ -2,7 +2,7 @@
 
 ## Artifact acquisition
 
-Use the harness-owned map bundle publisher after the additive `runtime-map-v1` capability has been negotiated through the gateway/MCP path. The legacy gameplay catalog remains separate. Install order is protocol/host producer, fenced transport, harness adapter, then visualizer. Consult the exact companion manifest before assembling binaries; source availability is not deployment proof.
+Use the harness-owned map bundle publisher after the additive `runtime-map-v1` capability has been negotiated through the gateway/MCP path. The legacy gameplay catalog remains separate. Install order is protocol/host producer, fenced transport, harness adapter, then visualizer. Consult the [companion assembly manifest](ASSEMBLY_MANIFEST.json) before assembling binaries; source availability is not deployment proof.
 
 The visualizer needs read access only to a bundle or artifact root. A complete bundle is acquired and validated before replacing the browser's immutable in-memory snapshot. Parsing, schema, identity, digest, image, or feed errors reject the replacement. Retained frames remain historical. HTTP workers do not perform filesystem reads or rasterization.
 
