@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 //! Optional bounded OTLP/HTTP export to an operator-selected loopback Collector.
 
+use hmac::{Hmac, KeyInit, Mac};
 use serde_json::json;
+use sha2::Sha256;
 use std::io::{Read, Write};
 use std::net::{Ipv4Addr, SocketAddr, TcpStream};
 use std::sync::{
@@ -48,8 +50,14 @@ pub struct Event {
     pub incomplete: bool,
     pub image_capable: bool,
     pub invalid_action: bool,
+    /// Optional harness lineage. Only the documented `opaque-v1:` token form
+    /// is eligible for a stable digest; legacy or descriptive IDs are emitted
+    /// as a redacted linkage marker.
     pub trajectory_id: Option<String>,
 }
+
+const OPAQUE_LINEAGE_PREFIX: &str = "opaque-v1:";
+const REDACTED_LINEAGE: &str = "redacted";
 
 #[derive(Default)]
 pub struct Counts {
@@ -78,6 +86,9 @@ impl Exporter {
         let (sender, receiver) = mpsc::sync_channel::<Event>(64);
         let stop = Arc::new(AtomicBool::new(false));
         let counts = Arc::new(Counts::default());
+        let mut lineage_key = [0u8; 32];
+        getrandom::fill(&mut lineage_key)
+            .map_err(|error| std::io::Error::other(format!("lineage key unavailable: {error}")))?;
         let worker_stop = Arc::clone(&stop);
         let worker_counts = Arc::clone(&counts);
         let worker = std::thread::Builder::new()
@@ -86,7 +97,7 @@ impl Exporter {
                 while !worker_stop.load(Ordering::Acquire) {
                     match receiver.recv_timeout(Duration::from_millis(50)) {
                         Ok(event) => {
-                            let ok = encode(event)
+                            let ok = encode(event, &lineage_key)
                                 .and_then(|bytes| send(port, &bytes).ok())
                                 .is_some();
                             if ok {
@@ -176,16 +187,22 @@ fn valid(event: &Event) -> bool {
         && event.edges <= 8192
         && event.graph_bytes <= 2 * 1024 * 1024
         && event.image_bytes <= 16 * 1024 * 1024
-        && event.trajectory_id.as_ref().is_none_or(|id| {
-            !id.is_empty()
-                && id.len() <= 128
-                && id
-                    .bytes()
-                    .all(|b| b.is_ascii_alphanumeric() || b"_-.:".contains(&b))
-        })
+        && event
+            .trajectory_id
+            .as_ref()
+            .is_none_or(|id| valid_trajectory_id(id))
 }
 
-fn encode(event: Event) -> Option<Vec<u8>> {
+fn valid_trajectory_id(id: &str) -> bool {
+    !id.is_empty()
+        && id.len() <= 128
+        && id
+            .bytes()
+            .all(|b| b.is_ascii_alphanumeric() || b"_-.:".contains(&b))
+        && (!id.starts_with(OPAQUE_LINEAGE_PREFIX) || approved_lineage(id))
+}
+
+fn encode(event: Event, lineage_key: &[u8; 32]) -> Option<Vec<u8>> {
     if !valid(&event) {
         return None;
     }
@@ -222,7 +239,17 @@ fn encode(event: Event) -> Option<Vec<u8>> {
         attributes.push(json!({"key":key,"value":{"boolValue":value}}));
     }
     if let Some(id) = event.trajectory_id {
-        let lineage = crate::digest::sha256(format!("ascension-map-trajectory-v1:{id}").as_bytes());
+        // A raw run/episode/trajectory identifier may be descriptive, stable,
+        // or otherwise enumerable. Hashing that value would make the digest a
+        // reversible lookup handle. Linkage is therefore derived only from a
+        // producer-issued 256-bit opaque token with an explicit namespace and
+        // a per-exporter secret; older IDs remain useful for event accounting
+        // but are never hashed.
+        let lineage = if approved_lineage(&id) {
+            lineage_digest(lineage_key, &id)
+        } else {
+            REDACTED_LINEAGE.to_owned()
+        };
         attributes.push(json!({"key":"sts2.trajectory_digest","value":{"stringValue":lineage}}));
     }
     let body = json!({"resourceSpans":[{"resource":{"attributes":[{"key":"service.name","value":{"stringValue":"ascension-map-visualizer"}}]},"scopeSpans":[{"scope":{"name":"ascension-map","version":"1"},"spans":[{"traceId":&hash[..32],"spanId":&hash[32..48],"name":format!("map.{}",event.stage.name()),"kind":1,"startTimeUnixNano":start.to_string(),"endTimeUnixNano":end.to_string(),"attributes":attributes}]}]}]});
@@ -232,6 +259,26 @@ fn encode(event: Event) -> Option<Vec<u8>> {
     } else {
         Some(bytes)
     }
+}
+
+fn approved_lineage(value: &str) -> bool {
+    value
+        .strip_prefix(OPAQUE_LINEAGE_PREFIX)
+        .is_some_and(crate::digest::valid)
+}
+
+fn lineage_digest(key: &[u8; 32], value: &str) -> String {
+    let mut mac = Hmac::<Sha256>::new_from_slice(key).expect("fixed-size lineage key");
+    mac.update(b"ascension-map-trajectory-v2:");
+    mac.update(value.as_bytes());
+    let output = mac.finalize().into_bytes();
+    const HEX: &[u8; 16] = b"0123456789abcdef";
+    let mut digest = String::with_capacity(output.len() * 2);
+    for byte in output {
+        digest.push(char::from(HEX[usize::from(byte >> 4)]));
+        digest.push(char::from(HEX[usize::from(byte & 15)]));
+    }
+    digest
 }
 
 fn send(port: u16, body: &[u8]) -> std::io::Result<()> {

@@ -11,6 +11,8 @@ description = "Deterministic read-only presentation of validated permitted map b
 serde.workspace = true
 serde_json.workspace = true
 sha2.workspace = true
+hmac.workspace = true
+getrandom.workspace = true
 resvg.workspace = true
 cap-std.workspace = true
 jsonschema = { version = "=0.52.1", default-features = false }
