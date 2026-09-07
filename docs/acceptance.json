@@ -114,8 +114,9 @@
       "independent_delta_review": "Identity/generation findings and incremental child bound closed; root map probe passed at final source; final addon hashes independently checked",
       "disposable_addon_staged": true,
       "live_host_map_verified": false,
-      "ci_run": "https://github.com/AI-Ascension/sts2-game-mod/actions/runs/34138231848",
-      "windows_workshop_probe": "blocked by unprivileged symlink creation; Linux owner probe passed"
+      "ci_run": "https://github.com/AI-Ascension/sts2-game-mod/actions/runs/34144062231",
+      "windows_workshop_probe": "blocked by unprivileged symlink creation; Linux owner probe passed",
+      "campaign_review_evidence": "docs/evidence/campaign-guard-review.json"
     },
     "provider": {
       "status": "repair_in_progress",
@@ -128,6 +129,11 @@
       "status": "focused_checks_passed_final_assembly_pending",
       "repair_commit": "acdf07ec18545807286678f2c68a12cf91f89df6",
       "reason": "Operating-system transaction lock and finite retention implemented; six concurrency, capacity, collision, and symlink regressions passed."
+    },
+    "cache": {
+      "status": "production_integration_under_repair",
+      "reason": "Independent review found the original bounded cache types were not consumed by runtime. Production reuse and fresh authorization checks are being implemented and require final independent review and cold/warm/invalidation validation.",
+      "artifact_deduplication_is_computational_cache": false
     }
   }
 }
