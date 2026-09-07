@@ -26,10 +26,10 @@
     },
     {
       "repository": "AI-Ascension/sts2-game-mod",
-      "commit": "4ce632bc10dfcfed4d8eeec449ff4df6048490fb",
-      "pull_request": null,
+      "commit": "64b8aed6bf50310b64353e032f618aa85a92e5bf",
+      "pull_request": "https://github.com/AI-Ascension/sts2-game-mod/pull/54",
       "pending_source_changes": true,
-      "evidence_scope": "pending identity and generation repairs; not an assembly pin"
+      "evidence_scope": "published head64b8aed; code31e905 build/probe gates passed; local main integration and incremental child-bound repair under validation"
     },
     {
       "repository": "AI-Ascension/sts2-gateway",
@@ -85,7 +85,7 @@
   "merge_authorized": false,
   "release_authorized": false,
   "blockers": [
-    "Host and harness repairs are not yet committed and validated as one assembly.",
+    "Harness provider boundary and evaluation repairs are not yet committed and validated as one assembly.",
     "Real provider graph/image delivery and host-settled map action remain unverified.",
     "Native child delegation is unavailable; three descendant layers remain unverified."
   ]

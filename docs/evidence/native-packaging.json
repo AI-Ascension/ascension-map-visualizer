@@ -63,5 +63,12 @@
   "supersedes": {
     "source_commit": "0fb467055ae907e1bbb2cae1f12b6210656c1deb",
     "reason": "Earlier binaries embedded local build paths; those archives are not distribution evidence."
+  },
+  "independent_review": {
+    "status": "passed",
+    "source_commit": "5b1d196480685a313bc2417d5b4450a63cc89ce5",
+    "evidence": "docs/evidence/release-privacy-review.md",
+    "old_archive_negative_control": "rejected",
+    "live_host_provider_evidence": false
   }
 }
