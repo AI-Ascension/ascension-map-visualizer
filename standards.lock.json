@@ -1,15 +1,15 @@
 {
   "lock_version": 1,
   "repository": "AI-Ascension/ascension-map-visualizer",
-  "profile_id": "planning-bootstrap",
+  "profile_id": "rust-browser",
   "source": {
     "repository": "AI-Ascension/.github",
     "commit": "eed9921b5c5d5c41380655bded84f9e2d0aab599",
-    "bundle_digest": "sha256:cef00213abf2113a99137411e3eee67dc4ee0dd57c3044b2cd4514854161091d",
+    "bundle_digest": "sha256:01a44552f0f717723e4e3e7f4e15f9f3ff632c3550498b63c5bf808265831936",
     "distribution": "local",
     "published": false
   },
-  "profile_sha256": "6db0a86efcc3766fbbe7acb74879231d3f43c3e4c93d41cfb345ffd69c5c40d2",
+  "profile_sha256": "0425f47070c7e0e9656b1908001578bb7ca8413ef179251be546f6a609747add",
   "files": [
     {
       "path": "standards/BASELINE.md",
@@ -89,11 +89,11 @@
     },
     {
       "path": "standards/profiles.yaml",
-      "sha256": "f766e00d5c5dd5c36e62309e0a2dba5ccb0677f27d678e592efc186a4c6b7e72"
+      "sha256": "6e60a5a6cc48be3c15f35f5f9b544feb960fc314c07e5db5262a5bc994a05794"
     },
     {
       "path": "standards/repositories.yaml",
-      "sha256": "92a3fcb513f54dba74ba10a8894274e4a53232d7d6274b277837fb90f94c69cf"
+      "sha256": "754ef722716b3e95a7dfed5cab6d4b9e4d16b37c86e8fb42b83dfdc34e90a72d"
     },
     {
       "path": "standards/rules.yaml",
@@ -153,7 +153,7 @@
     },
     {
       "path": "standards/tools/standards-sync/src/main.rs",
-      "sha256": "4f88e99612d88e015a1c192768824fb32ef7d6442495504895d3c9ad935fb714"
+      "sha256": "7e7c75f31d6dd85a7bf82a8ef163a23ad5aa023eb06a7fc6d79272f5da2686aa"
     }
   ],
   "protected_paths": [
