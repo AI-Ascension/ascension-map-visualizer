@@ -1,0 +1,74 @@
+{
+  "schema": "ascension-map-native-packaging-v1",
+  "source_commit": "5b1d196480685a313bc2417d5b4450a63cc89ce5",
+  "packages": [
+    {
+      "platform": "linux",
+      "build": {
+        "target": "x86_64-unknown-linux-gnu",
+        "commit": "5b1d196480685a313bc2417d5b4450a63cc89ce5",
+        "dirty": false,
+        "native": true,
+        "version": "0.1.0"
+      },
+      "archive": "ascension-map-linux-package-5b1d196.tar.gz",
+      "archive_sha256": "990fa7ad84fd72e48ef92a844a7101c653e5ff85b54fc0681166360d7ff1847f",
+      "rust_tests_passed": 31,
+      "checks": [
+        "cargo fmt --all --check",
+        "cargo clippy --workspace --all-targets --all-features --locked -- -D warnings",
+        "cargo test --workspace --all-targets --all-features --locked",
+        "node tools/build-release.mjs",
+        "tools/package.mjs",
+        "extracted archive SHA256SUMS verification",
+        "extracted executable doctor",
+        "extracted executable demo --out offline-demo",
+        "extracted executable validate --bundle offline-demo"
+      ],
+      "live_game_or_provider_evidence": false,
+      "executable_sha256": "782d0d24d795a35335b84dcb8b08458af5e97eeca71b853914cc8b590ad1462f",
+      "private_path_scan": "passed: local prefixes and independent home-path markers, UTF-8 and UTF-16",
+      "rust_test_evidence": "https://github.com/AI-Ascension/ascension-map-visualizer/actions/runs/34092979262"
+    },
+    {
+      "platform": "windows",
+      "build": {
+        "target": "x86_64-pc-windows-msvc",
+        "commit": "5b1d196480685a313bc2417d5b4450a63cc89ce5",
+        "dirty": false,
+        "native": true,
+        "version": "0.1.0"
+      },
+      "archive": "ascension-map-windows-package-5b1d196.tar.gz",
+      "archive_sha256": "ea2f134c18a13c55f0a24c7035c046a9376693d7df0855809da7eeab1927f014",
+      "rust_tests_passed": 29,
+      "checks": [
+        "cargo fmt --all --check",
+        "cargo clippy --workspace --all-targets --all-features --locked -- -D warnings",
+        "cargo test --workspace --all-targets --all-features --locked",
+        "node tools/build-release.mjs",
+        "tools/package.mjs",
+        "extracted archive SHA256SUMS verification",
+        "extracted executable doctor",
+        "extracted executable demo --out offline-demo",
+        "extracted executable validate --bundle offline-demo"
+      ],
+      "live_game_or_provider_evidence": false,
+      "executable_sha256": "a6b68feb455fa740d34ab1493ff5bc66bb4015367f5bf7405385d2952bbbc7a4",
+      "private_path_scan": "passed: local prefixes and independent home-path markers, UTF-8 and UTF-16",
+      "rust_test_evidence": "https://github.com/AI-Ascension/ascension-map-visualizer/actions/runs/34092979262"
+    }
+  ],
+  "ci_run": "https://github.com/AI-Ascension/ascension-map-visualizer/actions/runs/34092979262",
+  "supersedes": {
+    "source_commit": "0fb467055ae907e1bbb2cae1f12b6210656c1deb",
+    "reason": "Earlier binaries embedded local build paths; those archives are not distribution evidence."
+  },
+  "independent_review": {
+    "status": "passed",
+    "source_commit": "5b1d196480685a313bc2417d5b4450a63cc89ce5",
+    "evidence": "docs/evidence/release-privacy-review.md",
+    "old_archive_negative_control": "rejected",
+    "live_host_provider_evidence": false
+  }
+}

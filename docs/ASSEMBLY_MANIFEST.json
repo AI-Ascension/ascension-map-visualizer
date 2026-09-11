@@ -1,0 +1,136 @@
+{
+  "schema": "ascension-map-assembly-v1",
+  "assembly_ready": false,
+  "live_verified": false,
+  "repositories": [
+    {
+      "repository": "AI-Ascension/.github",
+      "commit": "0cbdf744d515b16c042eb6e16b1537d8ccf11771",
+      "pull_request": null,
+      "pending_source_changes": false,
+      "evidence_scope": "policy baseline; no change"
+    },
+    {
+      "repository": "AI-Ascension/sts2-game-core",
+      "commit": "87e0f3d9355c0827e989d9fbc31804440852519b",
+      "pull_request": null,
+      "pending_source_changes": false,
+      "evidence_scope": "no domain change required"
+    },
+    {
+      "repository": "AI-Ascension/sts2-protocol",
+      "commit": "d9ffb190ad8990e15f43d7992581dcb2d60b1971",
+      "pull_request": "https://github.com/AI-Ascension/sts2-protocol/pull/18",
+      "pending_source_changes": false,
+      "evidence_scope": "component checks passed"
+    },
+    {
+      "repository": "AI-Ascension/sts2-game-mod",
+      "commit": "089a60dc9f6377cc38b23cfab3b12ad0a00aeef7",
+      "addon_source_commit": "f62fedbc28eef4f15f4b41a0d45da5999edc0c84",
+      "pull_request": "https://github.com/AI-Ascension/sts2-game-mod/pull/54",
+      "pending_source_changes": false,
+      "evidence_scope": "Addon source gates passed; staged addon hashes verified; launcher trace22 and strict policy passed, independent campaign review closed; all three hosted checks passed at exact launcher head; live unverified"
+    },
+    {
+      "repository": "AI-Ascension/sts2-gateway",
+      "commit": "4b306321f869f0dffb99110cc127dcdac731df4a",
+      "pull_request": "https://github.com/AI-Ascension/sts2-gateway/pull/19",
+      "pending_source_changes": false,
+      "evidence_scope": "component checks passed"
+    },
+    {
+      "repository": "AI-Ascension/sts2-mcp-server",
+      "commit": "0d2035a08cbab9210e89ee0c1adc560fcf47d327",
+      "pull_request": "https://github.com/AI-Ascension/sts2-mcp-server/pull/24",
+      "pending_source_changes": false,
+      "evidence_scope": "component checks passed"
+    },
+    {
+      "repository": "AI-Ascension/sts2-harness",
+      "commit": "423d9052c8780173e640fa5991e88e8bae282f47",
+      "pull_request": "https://github.com/AI-Ascension/sts2-harness/pull/35",
+      "pending_source_changes": false,
+      "evidence_scope": "Replay source repair and full local checks passed; independent replay review interrupted by account usage limit; live unverified"
+    },
+    {
+      "repository": "AI-Ascension/ascension-map-visualizer",
+      "commit": "5b1d196480685a313bc2417d5b4450a63cc89ce5",
+      "pull_request": "https://github.com/AI-Ascension/ascension-map-visualizer/pull/2",
+      "pending_source_changes": false,
+      "evidence_scope": "native package source pin; subsequent documentation commits do not change package source"
+    },
+    {
+      "repository": "AI-Ascension/ai-agent-observability",
+      "commit": "67f455c0d4aa142139b3942ed0ad56138eecbf8b",
+      "pull_request": "https://github.com/AI-Ascension/ai-agent-observability/pull/12",
+      "pending_source_changes": false,
+      "evidence_scope": "documentation and deployment-contract checks only"
+    }
+  ],
+  "contracts": {
+    "protocol_revision": "d9ffb190ad8990e15f43d7992581dcb2d60b1971",
+    "runtime_map_schema_sha256": "6340f3cbe6c1b5728144fe89fdfdf8645acf2f59a77c0e0c30ebfeafc77515d8",
+    "harness_artifact_revision": "3c4470f0940e3668519194e13b59f234e75821a7",
+    "harness_artifact_manifest": "contract-artifacts/harness/provenance.json"
+  },
+  "merge_order": [
+    "sts2-protocol",
+    "sts2-game-mod",
+    "sts2-gateway",
+    "sts2-mcp-server",
+    "sts2-harness",
+    "ascension-map-visualizer",
+    "ai-agent-observability"
+  ],
+  "merge_authorized": false,
+  "release_authorized": false,
+  "blockers": [
+    "Steam client is currently unavailable. Latest request diagnostics are source-validated but have not yet run against the disposable host.",
+    "Real provider graph/image delivery and host-settled map action remain unverified.",
+    "Native child delegation is unavailable; three descendant layers remain unverified.",
+    "Independent review of the replay repair stopped at an account usage limit and remains incomplete."
+  ],
+  "prepared_executables": [
+    {
+      "owner": "AI-Ascension/sts2-gateway",
+      "source_commit": "4b306321f869f0dffb99110cc127dcdac731df4a",
+      "binary": "sts2-gateway-runtime",
+      "sha256": "2c4af20549d0e709dc4eccae443de4aec7605721d82047432192109f478176a5",
+      "platform": "linux-x86_64",
+      "live_verified": false
+    },
+    {
+      "owner": "AI-Ascension/sts2-mcp-server",
+      "source_commit": "0d2035a08cbab9210e89ee0c1adc560fcf47d327",
+      "binary": "sts2-mcp-server",
+      "sha256": "edd408799080a368ce9fe053aeaa380ec2401aeb565b8fa9436bdc119285e1f9",
+      "platform": "linux-x86_64",
+      "live_verified": false
+    },
+    {
+      "owner": "AI-Ascension/ascension-map-visualizer",
+      "source_commit": "5b1d196480685a313bc2417d5b4450a63cc89ce5",
+      "binary": "map-visualizer",
+      "sha256": "782d0d24d795a35335b84dcb8b08458af5e97eeca71b853914cc8b590ad1462f",
+      "platform": "linux-x86_64",
+      "live_verified": false
+    },
+    {
+      "owner": "AI-Ascension/sts2-harness",
+      "source_commit": "423d9052c8780173e640fa5991e88e8bae282f47",
+      "binary": "sts2-harness-runtime",
+      "sha256": "58d1fc0ee31e18a1aa9df3313cb75c363a3372104afd2ccc9531115d2c76999a",
+      "platform": "linux-x86_64",
+      "live_verified": false
+    },
+    {
+      "owner": "AI-Ascension/sts2-harness",
+      "source_commit": "423d9052c8780173e640fa5991e88e8bae282f47",
+      "binary": "sts2-astra-bridge",
+      "sha256": "d608c0290ce3f2b59b1c0be8a5e78c122f31cdede99626d5680e761ba66bbcd9",
+      "platform": "linux-x86_64",
+      "live_verified": false
+    }
+  ]
+}

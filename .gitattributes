@@ -1,0 +1,10 @@
+# Keep source checkout behavior consistent across native Windows and Linux.
+* text=auto eol=lf
+
+# These are exact copied bytes referenced by cryptographic provenance/digests.
+fixtures/** -text
+contract-artifacts/harness/*.json -text
+third-party/** -text
+
+*.png -text
+*.gz -text

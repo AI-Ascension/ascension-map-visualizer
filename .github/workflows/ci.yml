@@ -1,0 +1,124 @@
+name: Validate and package
+
+on:
+  pull_request:
+  push:
+    branches: [main, bootstrap]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: map-ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  rust:
+    name: Native Rust (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2025]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    env:
+      CARGO_BUILD_JOBS: 2
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install pinned toolchain
+        run: rustup toolchain install 1.97.1 --profile minimal --component rustfmt --component clippy --no-self-update
+      - run: cargo metadata --locked --no-deps --format-version 1
+      - run: cargo fmt --all --check
+      - run: cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
+      - run: cargo test --workspace --all-targets --all-features --locked
+      - run: node tools/build-release.mjs
+      - name: Native offline smoke test
+        shell: bash
+        run: |
+          executable=target/release/map-visualizer
+          if [[ "$RUNNER_OS" == Windows ]]; then executable="$executable.exe"; fi
+          "$executable" doctor
+          "$executable" demo --out "$RUNNER_TEMP/map-smoke"
+          "$executable" validate --bundle "$RUNNER_TEMP/map-smoke"
+      - name: Assemble distribution and dependency notices
+        env:
+          PACKAGE_ROOT: ${{ runner.temp }}/map-distribution
+        run: node tools/package.mjs "$env:PACKAGE_ROOT"
+        if: runner.os == 'Windows'
+      - name: Assemble Linux distribution and dependency notices
+        env:
+          PACKAGE_ROOT: ${{ runner.temp }}/map-distribution
+        run: node tools/package.mjs "$PACKAGE_ROOT"
+        if: runner.os == 'Linux'
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: map-visualizer-${{ matrix.os }}-${{ github.sha }}
+          path: ${{ runner.temp }}/map-distribution.tar.gz
+          if-no-files-found: error
+          retention-days: 14
+
+  browser:
+    name: Browser interaction and security
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      CARGO_BUILD_JOBS: 2
+      ASCENSION_MAP_SMALL_BUNDLE: ${{ github.workspace }}/artifacts/map-browser-small
+      ASCENSION_MAP_DENSE_BUNDLE: ${{ github.workspace }}/artifacts/map-browser-dense
+      ASCENSION_MAP_VISUALIZER_BIN: ${{ github.workspace }}/target/release/map-visualizer
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Record runner tooling
+        run: |
+          node --version
+          npm --version
+      - run: node tools/contracts.mjs
+      - name: Build actual CLI and fresh browser integration artifacts
+        run: |
+          rustup toolchain install 1.97.1 --profile minimal --no-self-update
+          node tools/build-release.mjs
+          mkdir -p artifacts
+          "$ASCENSION_MAP_VISUALIZER_BIN" render --bundle fixtures/conformance --out "$ASCENSION_MAP_SMALL_BUNDLE"
+          "$ASCENSION_MAP_VISUALIZER_BIN" demo --out "$ASCENSION_MAP_DENSE_BUNDLE"
+      - run: npm ci --ignore-scripts
+      - run: npx --no-install playwright install --with-deps chromium
+      - run: npm run test:browser
+
+  dependencies:
+    name: Dependency advisories and licenses
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      CARGO_BUILD_JOBS: 2
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: rustup toolchain install 1.97.1 --profile minimal --no-self-update
+      - run: cargo install cargo-deny --version 0.20.2 --locked
+      - run: cargo deny check
+
+  workflows:
+    name: Workflow security
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install pinned workflow validators
+        run: |
+          python3 -m venv "$RUNNER_TEMP/workflow-tools"
+          "$RUNNER_TEMP/workflow-tools/bin/pip" install zizmor==1.23.1
+          curl --fail --silent --show-error --location https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz --output "$RUNNER_TEMP/actionlint.tar.gz"
+          echo "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  $RUNNER_TEMP/actionlint.tar.gz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/actionlint.tar.gz" -C "$RUNNER_TEMP/workflow-tools/bin" actionlint
+      - name: Validate workflow definitions
+        run: |
+          "$RUNNER_TEMP/workflow-tools/bin/actionlint"
+          "$RUNNER_TEMP/workflow-tools/bin/zizmor" --offline .github/workflows

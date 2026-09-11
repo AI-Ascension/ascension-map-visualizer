@@ -1,0 +1,40 @@
+{
+  "schema": "ascension-map-viewer-v1",
+  "bundle_id": "fixture-browser-001",
+  "snapshot_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "analysis_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "map": {
+    "identity": "fixture-map-act-1",
+    "status": "AVAILABLE / COMPLETE / CURRENT",
+    "nodes": [
+      {"id":"start","floor":0,"lane":1,"category":"start","current":true,"legal":true,"reachable":true,"visited":true},
+      {"id":"left","floor":1,"lane":0,"category":"combat","current":false,"legal":true,"reachable":true,"visited":false},
+      {"id":"right","floor":1,"lane":2,"category":"event","current":false,"legal":true,"reachable":true,"visited":false},
+      {"id":"merge","floor":2,"lane":1,"category":"rest","current":false,"legal":false,"reachable":true,"visited":false},
+      {"id":"unknown","floor":2,"lane":1,"category":"unknown","current":false,"legal":false,"reachable":false,"visited":false},
+      {"id":"cross","floor":3,"lane":0,"category":"elite","current":false,"legal":false,"reachable":true,"visited":false},
+      {"id":"late","floor":3,"lane":2,"category":"shop","current":false,"legal":false,"reachable":true,"visited":false},
+      {"id":"terminal","floor":4,"lane":1,"category":"boss","current":false,"legal":false,"reachable":true,"visited":false}
+    ],
+    "edges": [
+      {"from":"start","to":"left","selected":false},
+      {"from":"start","to":"right","selected":false},
+      {"from":"left","to":"merge","selected":false},
+      {"from":"right","to":"merge","selected":true},
+      {"from":"merge","to":"cross","selected":false},
+      {"from":"merge","to":"late","selected":true},
+      {"from":"unknown","to":"late","selected":false},
+      {"from":"cross","to":"terminal","selected":false},
+      {"from":"late","to":"terminal","selected":true}
+    ]
+  },
+  "aliases": {"start":"N0001","left":"N0002","right":"N0003","merge":"N0004","unknown":"N0005","cross":"N0006","late":"N0007","terminal":"N0008"},
+  "candidates": [
+    {"id":"candidate-a","nodes":["start","right","merge","late","terminal"],"summary":"4 steps; keeps the event branch visible","selection":"selected"},
+    {"id":"candidate-b","nodes":["start","left","merge","cross","terminal"],"summary":"4 steps; takes the elite lane","selection":"comparison"}
+  ],
+  "historical": false,
+  "complete": true,
+  "available": true,
+  "warnings": []
+}

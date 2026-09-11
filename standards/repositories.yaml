@@ -118,9 +118,9 @@ repositories:
     default_branch: bootstrap
     baseline_commit: 18915e5571829e582f460bf14b674cc2db39d9c5
     owner: ARCH
-    profile_id: planning-bootstrap
+    profile_id: rust-browser
     adoption: prepared
-    language_scopes: [markdown, rust-planned, browser-planned, rust-tooling]
+    language_scopes: [rust, javascript, json, contracts]
     exclusion_reason: null
   - repository: AI-Ascension/ascension-brand-overhaul
     repository_id: 1359787764

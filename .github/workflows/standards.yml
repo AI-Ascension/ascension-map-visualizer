@@ -33,5 +33,5 @@ jobs:
         run: rustup toolchain install 1.97.1 --profile minimal --component rustfmt --component clippy
       - name: Validate local pinned standards
         run: cargo +1.97.1 run --locked --manifest-path standards/tools/standards-sync/Cargo.toml -- validate --root .
-      - name: Check bootstrap documentation and configuration
-        run: cargo +1.97.1 run --locked --manifest-path standards/tools/standards-sync/Cargo.toml -- check-bootstrap --root .
+      # The repository now adopts the active `rust-browser` profile, so the
+      # planning-bootstrap documentation check no longer applies.

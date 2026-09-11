@@ -1,0 +1,34 @@
+[
+  {
+    "repository": "governance",
+    "commit": "0cbdf744d515b16c042eb6e16b1537d8ccf11771"
+  },
+  {
+    "repository": "observability",
+    "commit": "b25880376d3a3334c77f58637267db93581c4c77"
+  },
+  {
+    "repository": "sts2-game-core",
+    "commit": "87e0f3d9355c0827e989d9fbc31804440852519b"
+  },
+  {
+    "repository": "sts2-game-mod",
+    "commit": "c41064a7e76aec4ce0b862a9a1cb160236b16d9d"
+  },
+  {
+    "repository": "sts2-gateway",
+    "commit": "33ea48f3b549f08e19db80d8c68c1438fa12a60a"
+  },
+  {
+    "repository": "sts2-harness",
+    "commit": "cb17b6c15262ce9356f1e85fd475af997aedc445"
+  },
+  {
+    "repository": "sts2-mcp-server",
+    "commit": "eb89ab251665f263c2fe3e6b735eeae3d3e40c83"
+  },
+  {
+    "repository": "sts2-protocol",
+    "commit": "8874b0951289fd943c7e14dea36557fa24c401d1"
+  }
+]

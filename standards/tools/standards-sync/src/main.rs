@@ -1885,8 +1885,31 @@ fn profile_plan(profile_id: &str, repository: &str) -> Result<ProfilePlan> {
             ],
             extended: Vec::new(),
         },
-        ("planning-bootstrap", "AI-Ascension/ascension-watchdog")
-        | ("planning-bootstrap", "AI-Ascension/ascension-map-visualizer") => ProfilePlan {
+        ("rust-browser", "AI-Ascension/ascension-map-visualizer") => ProfilePlan {
+            scopes: vec!["rust", "javascript", "json", "contracts"],
+            fast: rust_fast(true),
+            required: vec![
+                check(
+                    "cargo-clippy",
+                    "cargo clippy --workspace --all-targets --all-features --locked -- -D warnings",
+                    ".",
+                ),
+                check(
+                    "cargo-test",
+                    "cargo test --workspace --all-targets --all-features --locked",
+                    ".",
+                ),
+                check("contracts-check", "node tools/contracts.mjs", "."),
+                check("browser-check", "npm run test:browser", "."),
+                check("dependency-advisories", "cargo deny check", "."),
+            ],
+            extended: vec![check(
+                "release-package",
+                "node tools/build-release.mjs",
+                ".",
+            )],
+        },
+        ("planning-bootstrap", "AI-Ascension/ascension-watchdog") => ProfilePlan {
             scopes: vec!["markdown", "configuration", "rust-tooling"],
             fast: vec![git_diff_check(), standards_check()],
             required: vec![check(

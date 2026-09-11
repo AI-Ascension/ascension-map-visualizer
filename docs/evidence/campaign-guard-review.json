@@ -1,0 +1,34 @@
+{
+  "schema": "ascension-map-campaign-guard-review-v1",
+  "status": "source_review_and_synthetic_checks_passed",
+  "live_verified": false,
+  "harness_campaign_commit": "2ab45dadc6474fb1b21327137bd2fa4f95de5280",
+  "mod_trace_commit": "089a60dc9f6377cc38b23cfab3b12ad0a00aeef7",
+  "independent_review": "All reported guard, ordering, identity, cleanup, and terminal-trace findings closed",
+  "harness_tests": {
+    "source": "clean archive of the campaign commit",
+    "command": "cargo test --locked --offline -p sts2-harness --bin sts2-harness-runtime campaign -- --nocapture",
+    "passed_per_run": 3,
+    "runs": 2,
+    "exit_code": 0
+  },
+  "trace_tests": {
+    "command": "bash experiments/managed-rust-interop/live-campaign-trace.test.sh",
+    "checks_passed": 22,
+    "exit_code": 0
+  },
+  "mod_policy": {
+    "command": "cargo run --locked --offline --package repo-policy -- --strict",
+    "sized_files": 322,
+    "warnings": 0,
+    "errors": 0,
+    "exit_code": 0
+  },
+  "hosted_checks": {
+    "commit": "089a60dc9f6377cc38b23cfab3b12ad0a00aeef7",
+    "passed": 3,
+    "ci_run": "https://github.com/AI-Ascension/sts2-game-mod/actions/runs/34144062231",
+    "policy_run": "https://github.com/AI-Ascension/sts2-game-mod/actions/runs/34144062139"
+  },
+  "remaining": "Final assembled harness checks and actual disposable-host/provider execution remain separate gates."
+}

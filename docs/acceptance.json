@@ -1,0 +1,154 @@
+{
+  "schema": "ascension-map-acceptance-v1",
+  "assignment": "prompts/ASCENSION_MAP_VISUALIZER_ORCHESTRATION_PROMPT.md",
+  "complete": false,
+  "gates": [
+    {
+      "id": "A",
+      "requirement": "Runtime preflight and repository discovery",
+      "status": "in_progress",
+      "evidence": [
+        "docs/IMPLEMENTATION_STATUS.md",
+        "docs/REQUIREMENTS.md"
+      ]
+    },
+    {
+      "id": "B",
+      "requirement": "Ownership versioned contracts and fixtures",
+      "status": "in_progress",
+      "evidence": [
+        "docs/IMPLEMENTATION_STATUS.md",
+        "docs/REQUIREMENTS.md"
+      ]
+    },
+    {
+      "id": "C",
+      "requirement": "Native projection and fenced transport",
+      "status": "in_progress",
+      "evidence": [
+        "docs/IMPLEMENTATION_STATUS.md",
+        "docs/REQUIREMENTS.md"
+      ]
+    },
+    {
+      "id": "D",
+      "requirement": "Harness provider delivery and viewer",
+      "status": "in_progress",
+      "evidence": [
+        "docs/IMPLEMENTATION_STATUS.md",
+        "docs/REQUIREMENTS.md"
+      ]
+    },
+    {
+      "id": "E",
+      "requirement": "Integration offline packaging observability",
+      "status": "in_progress",
+      "evidence": [
+        "docs/IMPLEMENTATION_STATUS.md",
+        "docs/REQUIREMENTS.md"
+      ]
+    },
+    {
+      "id": "F",
+      "requirement": "Native provider validation and evaluation",
+      "status": "in_progress",
+      "evidence": [
+        "docs/IMPLEMENTATION_STATUS.md",
+        "docs/REQUIREMENTS.md"
+      ]
+    },
+    {
+      "id": "G",
+      "requirement": "Independent review repair and handoff",
+      "status": "in_progress",
+      "evidence": [
+        "docs/IMPLEMENTATION_STATUS.md",
+        "docs/REQUIREMENTS.md"
+      ]
+    }
+  ],
+  "capability_blockers": [
+    {
+      "requirement": "three genuine descendant layers",
+      "status": "blocked",
+      "reason": "Original and resumed Luna child tool surfaces have no delegation operation; observed descendants are all depth one."
+    }
+  ],
+  "live_status": {
+    "host_map_snapshot": "unverified",
+    "provider_graph_image_input": "unverified",
+    "settled_map_action": "unverified",
+    "game_or_provider_launched": true,
+    "host_bootstrap_attempts": 3,
+    "first_attempt": "host exited before readiness because Steam was unavailable; zero provider calls and actions; cleanup baseline preserved",
+    "current_attempt": "No attempt running. Third attempt failed on first MCP observation request; cleanup and protected-data checks passed. Fourth launch withheld because Steam client is unavailable.",
+    "steam_startup_issue": "https://github.com/AI-Ascension/sts2-game-mod/issues/56",
+    "evidence": "docs/evidence/live-attempts.json"
+  },
+  "component_evidence": {
+    "offline_product": {
+      "status": "validated",
+      "source_commit": "5b1d196480685a313bc2417d5b4450a63cc89ce5",
+      "rust_linux_passed": 31,
+      "rust_windows_passed": 29,
+      "browser_passed": 18,
+      "ci_run": "https://github.com/AI-Ascension/ascension-map-visualizer/actions/runs/34092979262",
+      "native_evidence": "docs/evidence/native-packaging.json",
+      "live_vertical_slice": false
+    },
+    "transport": {
+      "status": "component_checks_passed",
+      "protocol": "d9ffb190ad8990e15f43d7992581dcb2d60b1971",
+      "gateway": "4b306321f869f0dffb99110cc127dcdac731df4a",
+      "mcp": "0d2035a08cbab9210e89ee0c1adc560fcf47d327",
+      "integrated_host_settlement": false
+    },
+    "evaluation": {
+      "status": "final_workspace_checks_passed_live_unverified",
+      "repair_commit": "d8285f04a7dc8fcb45635df2f190bfac8e4a3efb",
+      "reason": "Measured synthetic tasks, bounded traversal, and actual renderer PNG now replace the rejected preliminary matrix; all four modes passed owner execution."
+    },
+    "host": {
+      "status": "build_and_probe_checks_passed",
+      "code_commit": "f62fedbc28eef4f15f4b41a0d45da5999edc0c84",
+      "documentation_head": "089a60dc9f6377cc38b23cfab3b12ad0a00aeef7",
+      "launcher_head": "089a60dc9f6377cc38b23cfab3b12ad0a00aeef7",
+      "campaign_trace_checks_passed": 22,
+      "campaign_independent_review": "all findings closed; clean harness campaign tests passed twice",
+      "pull_request": "https://github.com/AI-Ascension/sts2-game-mod/pull/54",
+      "independent_delta_review": "Identity/generation findings and incremental child bound closed; root map probe passed at final source; final addon hashes independently checked",
+      "disposable_addon_staged": true,
+      "live_host_map_verified": false,
+      "ci_run": "https://github.com/AI-Ascension/sts2-game-mod/actions/runs/34144062231",
+      "windows_workshop_probe": "blocked by unprivileged symlink creation; Linux owner probe passed",
+      "campaign_review_evidence": "docs/evidence/campaign-guard-review.json"
+    },
+    "provider": {
+      "status": "final_workspace_and_synthetic_capture_passed_live_unverified",
+      "independent_review": "capability negotiation, renderer and bridge provenance, early authority checks, secure temporary storage, execution lineage",
+      "real_provider_delivery": false,
+      "runtime_feed_publication": "implemented and source-reviewed; live unverified",
+      "synthetic_cli_capture": "docs/evidence/provider-cli-capture.json",
+      "assembly_evidence": "docs/evidence/harness-assembly.json",
+      "source_commit": "423d9052c8780173e640fa5991e88e8bae282f47"
+    },
+    "storage": {
+      "status": "final_workspace_checks_passed_live_unverified",
+      "repair_commit": "acdf07ec18545807286678f2c68a12cf91f89df6",
+      "reason": "Operating-system transaction lock and finite retention implemented; six concurrency, capacity, collision, and symlink regressions passed."
+    },
+    "cache": {
+      "status": "final_workspace_checks_passed_live_unverified",
+      "source_commit": "c4574555bf383014479b5651b59e0f90c0a40715",
+      "evidence": "docs/evidence/runtime-cache-review.json",
+      "artifact_deduplication_is_computational_cache": false,
+      "real_provider_or_game_evidence": false
+    }
+  },
+  "replay_repair": {
+    "source_commit": "423d9052c8780173e640fa5991e88e8bae282f47",
+    "local_checks": "passed",
+    "independent_review": "blocked_account_usage_limit",
+    "live_verified": false
+  }
+}

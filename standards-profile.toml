@@ -1,31 +1,70 @@
 schema_version = 1
-profile_id = "planning-bootstrap"
+profile_id = "rust-browser"
 repository = "AI-Ascension/ascension-map-visualizer"
 owner = "ARCH"
 source_bundle = "AI-Ascension/.github"
 source_commit = "eed9921b5c5d5c41380655bded84f9e2d0aab599"
-source_digest = "sha256:cef00213abf2113a99137411e3eee67dc4ee0dd57c3044b2cd4514854161091d"
+source_digest = "sha256:01a44552f0f717723e4e3e7f4e15f9f3ff632c3550498b63c5bf808265831936"
 distribution = "local"
 scopes = [
-    "markdown",
-    "configuration",
-    "rust-tooling",
+    "rust",
+    "javascript",
+    "json",
+    "contracts",
 ]
 
 [checks]
 fast = [
     "git-diff-check",
     "standards-validate",
+    "cargo-metadata",
+    "cargo-fmt",
 ]
-required = ["bootstrap-sources"]
-extended = []
+required = [
+    "cargo-clippy",
+    "cargo-test",
+    "contracts-check",
+    "browser-check",
+    "dependency-advisories",
+]
+extended = [
+    "release-package",
+]
 
-[checks.commands.bootstrap-sources]
-command = "cargo +1.97.1 run --locked --manifest-path standards/tools/standards-sync/Cargo.toml -- check-bootstrap --root ."
+[checks.commands.browser-check]
+command = "npm run test:browser"
+target = "."
+
+[checks.commands.cargo-clippy]
+command = "cargo clippy --workspace --all-targets --all-features --locked -- -D warnings"
+target = "."
+
+[checks.commands.cargo-fmt]
+command = "cargo fmt --all --check"
+target = "."
+
+[checks.commands.cargo-metadata]
+command = "cargo metadata --locked --no-deps --format-version 1"
+target = "."
+
+[checks.commands.cargo-test]
+command = "cargo test --workspace --all-targets --all-features --locked"
+target = "."
+
+[checks.commands.contracts-check]
+command = "node tools/contracts.mjs"
+target = "."
+
+[checks.commands.dependency-advisories]
+command = "cargo deny check"
 target = "."
 
 [checks.commands.git-diff-check]
 command = "git diff --check"
+target = "."
+
+[checks.commands.release-package]
+command = "node tools/build-release.mjs"
 target = "."
 
 [checks.commands.standards-validate]

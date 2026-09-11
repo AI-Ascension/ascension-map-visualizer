@@ -45,6 +45,12 @@ profiles:
     fast: [git-diff-check, standards-validate, shellcheck]
     required: [bootstrap-tests, validation-regressions, compose-policy-regressions, compose-source-regressions, compose-invariants, compose-config, compose-required-settings, compose-structured, dockerfile-mlflow, dockerfile-laminar]
     extended: []
+  - id: rust-browser
+    purpose: Rust rendering/bundle core with a browser presentation, packaging, and contract surface.
+    scopes: [rust, javascript, json, contracts]
+    fast: [git-diff-check, standards-validate, cargo-metadata, cargo-fmt]
+    required: [cargo-clippy, cargo-test, contracts-check, browser-check, dependency-advisories]
+    extended: [release-package]
   - id: planning-bootstrap
     purpose: Prompt or bootstrap repository awaiting an accepted product manifest.
     scopes: [markdown, configuration, rust-tooling]
