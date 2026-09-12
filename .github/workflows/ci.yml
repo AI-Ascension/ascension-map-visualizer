@@ -78,6 +78,10 @@ jobs:
           node --version
           npm --version
       - run: node tools/contracts.mjs
+      - name: Verify historical harness provenance
+        run: |
+          node --test tools/verify-harness-provenance.test.mjs
+          node tools/verify-harness-provenance.mjs
       - name: Build actual CLI and fresh browser integration artifacts
         run: |
           rustup toolchain install 1.97.1 --profile minimal --no-self-update
