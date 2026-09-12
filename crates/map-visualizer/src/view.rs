@@ -93,14 +93,19 @@ impl Bundle {
         let map = self.presentation()?;
         let candidates = self.candidates(&map)?;
         let warnings = array(&self.analysis, "warnings")?.clone();
-        Ok(
-            json!({"schema":"ascension-map-viewer-v1", "bundle_id": if stored {""} else {self.id()},
+        let mut viewer = json!({"schema":"ascension-map-viewer-v1", "bundle_id": if stored {""} else {self.id()},
             "snapshot_digest":self.manifest["snapshot_digest"], "analysis_digest":self.manifest["analysis_digest"],
             "aliases":map.aliases(), "map":map, "candidates":candidates,
             "historical":historical || matches!(self.snapshot.freshness, Freshness::Historical),
             "available":matches!(self.snapshot.availability, Availability::Available),
-            "complete":matches!(self.snapshot.completeness, Completeness::Complete), "warnings":warnings }),
-        )
+            "complete":matches!(self.snapshot.completeness, Completeness::Complete), "warnings":warnings });
+        if let Some(reference) = self.manifest.get("checkpoint_reference") {
+            viewer["schema"] = json!("ascension-map-viewer-v2");
+            viewer["checkpoint"] = json!({"reference":reference,
+                "run_id":self.manifest["run_id"], "episode_id":self.manifest["episode_id"],
+                "trajectory_id":self.manifest["trajectory_id"], "dispatchable":false});
+        }
+        Ok(viewer)
     }
 
     fn candidates(&self, map: &Map) -> Result<Vec<Value>, &'static str> {

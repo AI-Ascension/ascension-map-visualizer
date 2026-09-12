@@ -1,5 +1,26 @@
 # Viewer presentation payload v1
 
+Checkpoint-bearing owner bundles use `sts2.map-view-bundle-v2` and publish
+`ascension-map-viewer-v2`; legacy bundles continue to produce the unchanged v1 payload above.
+The v2 viewer requires one additional `checkpoint` object with exactly `reference`, `run_id`,
+`episode_id`, `trajectory_id`, and `dispatchable` (always false). `reference` follows the frozen
+protocol `ascension.exact_checkpoint_reference.v1` / `exact-checkpoint-reference-v1` public
+shape: opaque `ckpt-h1:` handle, occurrence, boundary kind/phase, producer assurance, and
+restore-verification boolean. Unknown versions, additional fields, malformed handles, and
+inconsistent assurance/verification are rejected before admission. No exact-state, checkpoint,
+compatibility, or blob digest is admitted in this reference.
+
+The evidence panel labels assurance and verification as producer claims, shows the recorded
+run/episode/trajectory lineage, and grants no dispatch or restore authority. Text is inserted
+through DOM text nodes; imported markup is never executed. Historical frames remain historical,
+including after a verified checkpoint reference is displayed. Returning to a legacy frame clears
+the panel. The visualizer does not infer checkpoint equality, verify restored gameplay, or retrieve
+privileged artifacts from a public handle.
+
+The v2 operational feed may retain mixed v1/v2 bundle history. Each entry's optional reference must
+match the referenced bundle exactly, including absence. A stale cached frame cannot make an altered
+reference pass admission; invalid updates leave the previous validated view intact.
+
 The Rust adapter produces `viewer.json` only after validating the upstream snapshot, analysis and manifest. This is a presentation artifact, not an alternative protocol or analysis authority. The browser never interprets graph adjacency as permission to act.
 
 ```json

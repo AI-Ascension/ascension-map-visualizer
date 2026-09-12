@@ -1,6 +1,6 @@
 {
   "repository": "https://github.com/AI-Ascension/sts2-harness",
-  "commit": "3c4470f0940e3668519194e13b59f234e75821a7",
+  "commit": "ed2423b3f7532755caada7f5d273944e0b541bd1",
   "license": "MIT",
   "files": [
     {
@@ -11,12 +11,12 @@
     {
       "source": "docs/map-view-bundle.schema.json",
       "copy": "contract-artifacts/harness/bundle.schema.json",
-      "sha256": "896ee0639aa305bed5b60c20dda1564d436bd54d5dea17f059dd9a1fb6caaaaa"
+      "sha256": "7381694e9978bbbdc3246e928112ad49625b9843e3d27c05b8d0a461db5cd644"
     },
     {
       "source": "docs/map-feed.schema.json",
       "copy": "contract-artifacts/harness/feed.schema.json",
-      "sha256": "e3170bdfff6a45f5e3af8b2ab4846eaa3c7c5c7b40920ce0467a8f2ec9910290"
+      "sha256": "85c67d5385240cf8fab273bbc15d8dfbddf8606f986967b202b22749878649e4"
     },
     {
       "source": "crates/harness/tests/fixtures/map-bundle-v1/9ef1d35f8d29f9112b5fdaf08070c7b23293c5744eeed346212942e435c4406a/manifest.json",

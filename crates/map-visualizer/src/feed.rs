@@ -175,6 +175,12 @@ fn descriptor(id: &str) -> Value {
 }
 
 fn validate_entry(entry: &Value, manifest: &Value) -> Result<(), &'static str> {
+    if let Some(reference) = entry.get("checkpoint_reference") {
+        crate::checkpoint::validate(reference)?;
+    }
+    if entry.get("checkpoint_reference") != manifest.get("checkpoint_reference") {
+        return Err("feed checkpoint reference mismatch");
+    }
     for field in ["run_id", "episode_id", "trajectory_id"] {
         if entry[field] != manifest[field] {
             return Err("feed lineage mismatch");

@@ -3,6 +3,7 @@
 
 pub mod arguments;
 pub mod bundle;
+mod checkpoint;
 pub mod cli;
 mod cli_telemetry;
 pub mod contracts;

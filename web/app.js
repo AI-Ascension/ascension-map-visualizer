@@ -222,9 +222,30 @@
     return Object.freeze(value);
   }
 
+  function validateCheckpoint(checkpoint) {
+    exactKeys(checkpoint, ["reference", "run_id", "episode_id", "trajectory_id", "dispatchable"], "checkpoint");
+    if (checkpoint.dispatchable !== false) throw new Error("checkpoint must be read only");
+    ["run_id", "episode_id", "trajectory_id"].forEach(function (field) { textBytes(checkpoint[field], "checkpoint." + field); });
+    var reference = checkpoint.reference;
+    exactKeys(reference, ["schema", "reference_version", "handle", "occurrence", "boundary_kind", "boundary_phase", "assurance", "restore_verified"], "checkpoint reference");
+    if (reference.schema !== "ascension.exact_checkpoint_reference.v1" || reference.reference_version !== "exact-checkpoint-reference-v1"
+        || typeof reference.handle !== "string" || !/^ckpt-h1:[0-9a-f]{64}$/.test(reference.handle)
+        || typeof reference.occurrence !== "string" || !/^[A-Za-z0-9_.:-]{1,256}$/.test(reference.occurrence)) throw new Error("unsupported checkpoint reference");
+    ["boundary_kind", "boundary_phase"].forEach(function (field) {
+      if (typeof reference[field] !== "string" || !reference[field].length || Array.from(reference[field]).length > 256) throw new Error("invalid checkpoint boundary");
+    });
+    if (!["public_observation_only", "capture_only", "restore_supported", "restore_verified", "continuation_certified"].includes(reference.assurance)
+        || reference.restore_verified !== ["restore_verified", "continuation_certified"].includes(reference.assurance)) throw new Error("inconsistent checkpoint assurance");
+  }
+
   function validatePayload(payload) {
-    exactKeys(payload, ["schema", "bundle_id", "snapshot_digest", "analysis_digest", "map", "aliases", "candidates", "historical", "complete", "available", "warnings"], "payload");
-    if (payload.schema !== "ascension-map-viewer-v1") throw new Error("payload.schema is unsupported");
+    var fields = ["schema", "bundle_id", "snapshot_digest", "analysis_digest", "map", "aliases", "candidates", "historical", "complete", "available", "warnings"];
+    if (Object.prototype.hasOwnProperty.call(payload, "checkpoint")) {
+      fields.push("checkpoint");
+      validateCheckpoint(payload.checkpoint);
+    }
+    exactKeys(payload, fields, "payload");
+    if (payload.schema !== (fields.includes("checkpoint") ? "ascension-map-viewer-v2" : "ascension-map-viewer-v1")) throw new Error("payload.schema is unsupported");
     canonicalText(payload.bundle_id, "payload.bundle_id", true);
     if (!/^[a-f0-9]{64}$/u.test(payload.snapshot_digest)) throw new Error("payload.snapshot_digest must be lowercase SHA-256 text");
     if (!/^[a-f0-9]{64}$/u.test(payload.analysis_digest)) throw new Error("payload.analysis_digest must be lowercase SHA-256 text");
@@ -425,6 +446,22 @@
   }
 
   function updateSourceLabels() {
+    var checkpointPanel = document.getElementById("checkpoint-evidence");
+    checkpointPanel.replaceChildren();
+    if (state.payload && state.payload.checkpoint) {
+      var checkpoint = state.payload.checkpoint;
+      var reference = checkpoint.reference;
+      checkpointPanel.appendChild(make("h2", {}, "Checkpoint evidence"));
+      ["Handle: " + reference.handle, "Occurrence: " + reference.occurrence,
+        "Boundary: " + reference.boundary_kind + " / " + reference.boundary_phase,
+        "Producer assurance: " + reference.assurance.replace(/_/g, " "),
+        "Producer restore verification: " + (reference.restore_verified ? "recorded" : "not recorded"),
+        "Run: " + checkpoint.run_id, "Episode: " + checkpoint.episode_id,
+        "Trajectory: " + checkpoint.trajectory_id,
+        "Read only. This reference grants no current action or restore authority."
+      ].forEach(function (line) { checkpointPanel.appendChild(make("p", { class: "muted-copy" }, line)); });
+    }
+    checkpointPanel.hidden = !state.payload || !state.payload.checkpoint;
     setConnectionBadge();
     setStatusBadge();
     if (!state.payload) {
@@ -436,7 +473,7 @@
     var source = state.source === "live" ? "LIVE" : state.source === "replay" ? "REPLAY" : state.source === "bundled" ? "EXAMPLE" : "OFFLINE";
     refs.bundleLabel.textContent = source + " · " + (state.payload.bundle_id || "unbound artifact");
     refs.scopeLabel.textContent = state.payload.map.identity;
-    refs.validationLabel.textContent = "Validated viewer payload v1";
+    refs.validationLabel.textContent = "Validated viewer payload " + (state.payload.checkpoint ? "v2" : "v1");
   }
 
   function categoryClass(category) {

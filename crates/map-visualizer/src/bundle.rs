@@ -31,6 +31,9 @@ impl Bundle {
     ) -> Result<Self, AcquisitionError> {
         let manifest = json::decode(&read_file(File::Manifest)?, File::Manifest.limit() as usize)?;
         contracts::validate(Kind::Bundle, &manifest)?;
+        if let Some(reference) = manifest.get("checkpoint_reference") {
+            crate::checkpoint::validate(reference)?;
+        }
         let expected = string(&manifest, "bundle_digest")?;
         if json::content_digest(&manifest, "bundle_digest")? != expected {
             return Err(AcquisitionError::Invalid("bundle manifest digest mismatch"));
