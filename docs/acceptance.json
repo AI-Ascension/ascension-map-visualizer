@@ -98,7 +98,7 @@
     },
     "transport": {
       "status": "component_checks_passed",
-      "protocol": "d9ffb190ad8990e15f43d7992581dcb2d60b1971",
+      "protocol": "0bc689eabc5542ede2b09b030d9ea32daa8a73e7",
       "gateway": "4b306321f869f0dffb99110cc127dcdac731df4a",
       "mcp": "0d2035a08cbab9210e89ee0c1adc560fcf47d327",
       "integrated_host_settlement": false
