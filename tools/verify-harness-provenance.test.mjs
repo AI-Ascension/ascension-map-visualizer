@@ -55,3 +55,41 @@ test('rejects duplicate, escaping, malformed and symlinked provenance inputs', (
     fs.rmSync(temporary, {recursive: true, force: true});
   }
 });
+
+test('rejects a file entry that carries no usable immutable owner revision', () => {
+  const temporary = fixture();
+  try {
+    const file = path.join(temporary, manifestPath);
+    const committed = fs.readFileSync(file, 'utf8');
+    const mutate = (change, expected) => {
+      const manifest = JSON.parse(committed);
+      change(manifest);
+      fs.writeFileSync(file, JSON.stringify(manifest));
+      const result = validate(temporary);
+      assert.notEqual(result.status, 0);
+      assert.match(result.stderr, expected);
+      fs.writeFileSync(file, committed);
+    };
+    mutate((value) => { delete value.files[0].commit; }, /file entry schema/);
+    mutate((value) => { value.files[0].commit = 'unknown'; }, /file entry schema/);
+    mutate((value) => { value.files[0].commit = value.files[0].commit.slice(0, 39); }, /file entry schema/);
+    mutate((value) => { value.commit = value.files[0].commit; }, /provenance: schema\b/);
+  } finally {
+    fs.rmSync(temporary, {recursive: true, force: true});
+  }
+});
+
+test('attributes each copy to one immutable owner revision group', () => {
+  const manifest = JSON.parse(fs.readFileSync(path.join(root, manifestPath), 'utf8'));
+  for (const entry of manifest.files) {
+    assert.match(entry.commit, /^[0-9a-f]{40}$/);
+  }
+  const group = (prefix) => new Set(
+    manifest.files.filter((entry) => entry.copy.startsWith(prefix)).map((entry) => entry.commit),
+  );
+  assert.equal(group('contract-artifacts/harness/').size, 1, 'schema copies must share one owner revision');
+  assert.equal(group('fixtures/').size, 1, 'fixture copies must share one owner revision');
+  const count = (prefix) => manifest.files.filter((entry) => entry.copy.startsWith(prefix)).length;
+  assert.equal(count('contract-artifacts/harness/') + count('fixtures/'), manifest.files.length,
+    'every copied file belongs to an attributed group');
+});
