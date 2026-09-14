@@ -83,6 +83,37 @@ test.describe('offline viewer', () => {
   });
 });
 
+test.describe('payload compatibility', () => {
+  async function validate(page, payload) {
+    return page.evaluate((candidate) => {
+      try { window.__ASCENSION_MAP_VIEWER__.validatePayload(candidate); return 'ok'; }
+      catch (error) { return String(error.message); }
+    }, payload);
+  }
+
+  test('accepts every product availability status line and schema-valid warnings', async ({ page }) => {
+    await page.goto(offlineUrl);
+    await page.waitForFunction(() => Boolean(window.__ASCENSION_MAP_VIEWER__));
+    const base = JSON.parse(fs.readFileSync(fixture, 'utf8'));
+    const variant = (status, overrides = {}) => ({ ...base, ...overrides, map: { ...base.map, status } });
+
+    for (const status of [
+      'AVAILABLE / COMPLETE / CURRENT',
+      'UNAVAILABLE / INCOMPLETE / CURRENT',
+      'NOT_OBSERVABLE / UNKNOWN / CURRENT',
+      'UNSUPPORTED / UNKNOWN / HISTORICAL',
+    ]) {
+      expect(await validate(page, variant(status)), status).toBe('ok');
+    }
+
+    expect(await validate(page, variant('AVAILABLE / COMPLETE / CURRENT', { warnings: ['', 'bounded warning'] }))).toBe('ok');
+
+    for (const status of ['BOGUS / COMPLETE / CURRENT', 'AVAILABLE / BOGUS / CURRENT', 'AVAILABLE / COMPLETE']) {
+      expect(await validate(page, variant(status)), status).not.toBe('ok');
+    }
+  });
+});
+
 test.describe('live and replay adapters', () => {
   test('uses only fixed routes, reconnects atomically, and marks historical replay', async ({ page }) => {
     const requests = [];

@@ -67,13 +67,11 @@ impl Bundle {
                 selected: false,
             })
             .collect();
-        let status = format!(
-            "{} / {} / {}",
-            enum_name(snapshot.availability)?,
-            enum_name(snapshot.completeness)?,
-            enum_name(snapshot.freshness)?
-        )
-        .to_ascii_uppercase();
+        let status = status_line(
+            snapshot.availability,
+            snapshot.completeness,
+            snapshot.freshness,
+        )?;
         let map = Map {
             identity: snapshot
                 .map_instance_id
@@ -181,6 +179,24 @@ fn enum_name(value: impl serde::Serialize) -> Result<String, &'static str> {
         .ok_or("invalid category")
 }
 
+/// Canonical `AVAILABILITY / COMPLETENESS / FRESHNESS` line presented to the browser.
+///
+/// The bundled viewer validates each component against the protocol enum names, so this
+/// format is a cross-boundary contract and must cover every enum value.
+fn status_line(
+    availability: Availability,
+    completeness: Completeness,
+    freshness: Freshness,
+) -> Result<String, &'static str> {
+    Ok(format!(
+        "{} / {} / {}",
+        enum_name(availability)?,
+        enum_name(completeness)?,
+        enum_name(freshness)?
+    )
+    .to_ascii_uppercase())
+}
+
 fn array<'a>(value: &'a Value, field: &str) -> Result<&'a Vec<Value>, &'static str> {
     value
         .get(field)
@@ -200,4 +216,45 @@ fn count(value: &Value, field: &str) -> Result<u64, &'static str> {
         .get(field)
         .and_then(Value::as_u64)
         .ok_or("required route count missing")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{Availability, Completeness, Freshness, status_line};
+
+    #[test]
+    fn status_line_covers_every_protocol_state() {
+        let cases = [
+            (
+                Availability::Available,
+                Completeness::Complete,
+                Freshness::Current,
+                "AVAILABLE / COMPLETE / CURRENT",
+            ),
+            (
+                Availability::Unavailable,
+                Completeness::Incomplete,
+                Freshness::Current,
+                "UNAVAILABLE / INCOMPLETE / CURRENT",
+            ),
+            (
+                Availability::NotObservable,
+                Completeness::Unknown,
+                Freshness::Current,
+                "NOT_OBSERVABLE / UNKNOWN / CURRENT",
+            ),
+            (
+                Availability::Unsupported,
+                Completeness::Incomplete,
+                Freshness::Historical,
+                "UNSUPPORTED / INCOMPLETE / HISTORICAL",
+            ),
+        ];
+        for (availability, completeness, freshness, expected) in cases {
+            assert_eq!(
+                status_line(availability, completeness, freshness).unwrap(),
+                expected
+            );
+        }
+    }
 }
