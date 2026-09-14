@@ -28,13 +28,14 @@ function regularFile(root, name, label) {
 }
 
 export function validateManifest(raw, root = repositoryRoot) {
-  if (!raw || typeof raw !== 'object' || Array.isArray(raw) || Object.keys(raw).length !== 4
-    || raw.repository !== sourceRepository || !/^[0-9a-f]{40}$/.test(raw.commit)
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw) || Object.keys(raw).length !== 3
+    || raw.repository !== sourceRepository
     || typeof raw.license !== 'string' || !raw.license || !Array.isArray(raw.files) || raw.files.length === 0) fail('schema');
   const sources = new Set();
   const copies = new Set();
   for (const entry of raw.files) {
-    if (!entry || typeof entry !== 'object' || Array.isArray(entry) || Object.keys(entry).length !== 3
+    if (!entry || typeof entry !== 'object' || Array.isArray(entry) || Object.keys(entry).length !== 4
+      || !/^[0-9a-f]{40}$/.test(entry.commit)
       || !/^[a-f0-9]{64}$/.test(entry.sha256)) fail('file entry schema');
     if (sources.has(entry.source) || copies.has(entry.copy)) fail('duplicate source or copy path');
     sources.add(entry.source); copies.add(entry.copy);
@@ -51,20 +52,26 @@ if (process.argv.includes('--validate-only')) {
   process.exit(0);
 }
 
-const checkout = fs.mkdtempSync(path.join(os.tmpdir(), 'map-harness-provenance-'));
+const commits = [...new Set(manifest.files.map((entry) => entry.commit))];
+const checkouts = new Map();
 try {
-  execFileSync('git', ['init', '--quiet', checkout]);
-  execFileSync('git', ['-C', checkout, 'remote', 'add', 'origin', manifest.repository]);
-  execFileSync('git', ['-C', checkout, 'fetch', '--depth=1', 'origin', manifest.commit], {stdio: 'inherit'});
-  execFileSync('git', ['-C', checkout, 'checkout', '--quiet', '--detach', 'FETCH_HEAD']);
-  if (execFileSync('git', ['-C', checkout, 'rev-parse', 'HEAD'], {encoding: 'utf8'}).trim() !== manifest.commit) throw new Error('historical checkout did not resolve pinned commit');
+  for (const commit of commits) {
+    const checkout = fs.mkdtempSync(path.join(os.tmpdir(), 'map-harness-provenance-'));
+    checkouts.set(commit, checkout);
+    execFileSync('git', ['init', '--quiet', checkout]);
+    execFileSync('git', ['-C', checkout, 'remote', 'add', 'origin', manifest.repository]);
+    execFileSync('git', ['-C', checkout, 'fetch', '--depth=1', 'origin', commit], {stdio: 'inherit'});
+    execFileSync('git', ['-C', checkout, 'checkout', '--quiet', '--detach', 'FETCH_HEAD']);
+    if (execFileSync('git', ['-C', checkout, 'rev-parse', 'HEAD'], {encoding: 'utf8'}).trim() !== commit) throw new Error('historical checkout did not resolve pinned commit');
+  }
   for (const entry of manifest.files) {
+    const checkout = checkouts.get(entry.commit);
     const source = fs.readFileSync(regularFile(checkout, entry.source, 'source'));
     const copy = fs.readFileSync(regularFile(repositoryRoot, entry.copy, 'copied'));
     const sourceDigest = createHash('sha256').update(source).digest('hex');
     if (sourceDigest !== entry.sha256 || !source.equals(copy)) throw new Error(`historical provenance mismatch: ${entry.copy}`);
   }
-  process.stdout.write(`Verified ${manifest.files.length} historical harness files at ${manifest.commit}.\n`);
+  process.stdout.write(`Verified ${manifest.files.length} historical harness files across ${commits.length} source commits.\n`);
 } finally {
-  fs.rmSync(checkout, {recursive: true, force: true});
+  for (const checkout of checkouts.values()) fs.rmSync(checkout, {recursive: true, force: true});
 }
