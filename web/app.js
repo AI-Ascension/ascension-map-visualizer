@@ -15,10 +15,9 @@
   var POLL_MS = 6000;
   var ZOOM_MIN = 0.55;
   var ZOOM_MAX = 4;
-  var STATUS_WORDS = new Set([
-    "AVAILABLE", "UNAVAILABLE", "COMPLETE", "INCOMPLETE", "CURRENT", "STALE",
-    "HISTORICAL", "UNKNOWN", "DISCONNECTED"
-  ]);
+  var STATUS_AVAILABILITY = new Set(["AVAILABLE", "UNAVAILABLE", "NOT_OBSERVABLE", "UNSUPPORTED"]);
+  var STATUS_COMPLETENESS = new Set(["COMPLETE", "INCOMPLETE", "UNKNOWN"]);
+  var STATUS_FRESHNESS = new Set(["CURRENT", "HISTORICAL"]);
   var refs = {};
   var state = {
     payload: null,
@@ -107,8 +106,11 @@
 
   function statusText(value, path) {
     var status = textBytes(value, path);
-    var words = status.toUpperCase().split(/[^A-Z]+/u).filter(Boolean);
-    if (!words.length || words.some(function (word) { return !STATUS_WORDS.has(word); })) {
+    var parts = status.split(" / ");
+    if (parts.length !== 3
+        || !STATUS_AVAILABILITY.has(parts[0])
+        || !STATUS_COMPLETENESS.has(parts[1])
+        || !STATUS_FRESHNESS.has(parts[2])) {
       throw new Error(path + " contains an unsupported status");
     }
     return status;
@@ -253,7 +255,11 @@
     bool(payload.complete, "payload.complete");
     bool(payload.available, "payload.available");
     if (!Array.isArray(payload.warnings) || payload.warnings.length > 128) throw new Error("payload.warnings has an unsupported shape");
-    payload.warnings.forEach(function (warning, index) { textBytes(warning, "payload.warnings[" + index + "]"); });
+    payload.warnings.forEach(function (warning, index) {
+      if (typeof warning !== "string") throw new Error("payload.warnings[" + index + "] must be text");
+      if (warning.length === 0) return;
+      textBytes(warning, "payload.warnings[" + index + "]");
+    });
 
     exactKeys(payload.map, ["identity", "status", "nodes", "edges"], "payload.map");
     textBytes(payload.map.identity, "payload.map.identity");
