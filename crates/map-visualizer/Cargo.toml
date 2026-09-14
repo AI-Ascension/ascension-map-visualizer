@@ -16,7 +16,7 @@ getrandom.workspace = true
 resvg.workspace = true
 cap-std.workspace = true
 jsonschema = { version = "=0.52.1", default-features = false }
-sts2-protocol = { git = "https://github.com/AI-Ascension/sts2-protocol.git", rev = "d9ffb190ad8990e15f43d7992581dcb2d60b1971", version = "0.0.0" }
+sts2-protocol = { git = "https://github.com/AI-Ascension/sts2-protocol.git", rev = "0bc689eabc5542ede2b09b030d9ea32daa8a73e7", version = "0.0.0" }
 ctrlc = { version = "=3.5.2", features = ["termination"] }
 
 [dev-dependencies]
