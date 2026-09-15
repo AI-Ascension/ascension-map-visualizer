@@ -2,6 +2,56 @@
   "schema": "ascension-map-assembly-v1",
   "assembly_ready": false,
   "live_verified": false,
+  "delivery_reconciled_on": "2026-09-15",
+  "delivery_ledger": "docs/ACCEPTANCE_LEDGER.md",
+  "pin_scope": "Existing commit and executable fields preserve historical test/build pins, not a newly qualified deployment tuple.",
+  "current_delivery": [
+    {
+      "repository": "AI-Ascension/sts2-protocol",
+      "pull_request": 18,
+      "state": "merged",
+      "merge_commit": "7c448bd8d7a695ada48830176f3d738286caafe4"
+    },
+    {
+      "repository": "AI-Ascension/sts2-game-mod",
+      "pull_request": 54,
+      "state": "merged",
+      "merge_commit": "1ec9431de14070f8f94fc281d44b3ae5d41573a0"
+    },
+    {
+      "repository": "AI-Ascension/sts2-gateway",
+      "pull_request": 19,
+      "state": "merged",
+      "merge_commit": "02c816b6ac43c6b5b62292da0e5f19259c414773"
+    },
+    {
+      "repository": "AI-Ascension/sts2-mcp-server",
+      "pull_request": 24,
+      "state": "merged",
+      "merge_commit": "89b20245d6ac8b9f59dd5655dc2fca973e04bd9f"
+    },
+    {
+      "repository": "AI-Ascension/sts2-harness",
+      "pull_request": 35,
+      "state": "merged",
+      "merge_commit": "4c5b1012efb0b8ffd0e95b76654678b170de4720"
+    },
+    {
+      "repository": "AI-Ascension/ascension-map-visualizer",
+      "pull_request": 2,
+      "state": "merged",
+      "merge_commit": "b7b5c6ef3ac0cdb302fe01f989321c12186d6d9b",
+      "subsequent_product_prs": [7, 9, 11, 13],
+      "inspected_default_commit": "abc0249d1852faaefd59260d63058ec59e833353"
+    },
+    {
+      "repository": "AI-Ascension/ai-agent-observability",
+      "pull_request": 12,
+      "state": "closed_without_merge",
+      "merge_commit": null,
+      "replacement": "https://github.com/AI-Ascension/ai-agent-observability/blob/c309c8e532574754609d9491f0a10be584f83a83/docs/MAP_ARTIFACTS.md"
+    }
+  ],
   "repositories": [
     {
       "repository": "AI-Ascension/.github",
@@ -84,12 +134,14 @@
     "ai-agent-observability"
   ],
   "merge_authorized": false,
+  "authorization_record_scope": "Historical assembly assignment; current merged delivery is recorded separately above. This manifest grants no runtime or release authority.",
   "release_authorized": false,
   "blockers": [
-    "Steam client is currently unavailable. Latest request diagnostics are source-validated but have not yet run against the disposable host.",
+    "Current host readiness is unverified. Historical Steam failures are retained; game-mod #56 is closed after #75, while native acceptance remains visualizer #14.",
     "Real provider graph/image delivery and host-settled map action remain unverified.",
-    "Native child delegation is unavailable; three descendant layers remain unverified.",
-    "Independent review of the replay repair stopped at an account usage limit and remains incomplete."
+    "Three descendant layers remain unverified; historical child-tool failure needs current preflight and evidence under acceptance-ledger R1.",
+    "Independent review of the replay repair stopped at an account usage limit and remains incomplete under acceptance-ledger R2.",
+    "A coherent current assembly, compatibility, evaluation and regression tuple remains acceptance-ledger R3."
   ],
   "prepared_executables": [
     {

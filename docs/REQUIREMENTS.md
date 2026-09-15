@@ -1,5 +1,11 @@
 # Requirement-to-test matrix
 
+Current delivery and the exhaustive original section 18 / gate A–G mapping are in
+[ACCEPTANCE_LEDGER.md](ACCEPTANCE_LEDGER.md). That ledger also names bounded owner tasks
+R1–R3 and separates closed game-mod #56 from the still-open native/provider Map#14 gate.
+The component matrix below preserves historical test pins and counts; it does not claim
+that those checks were rerun against current default branches or that the feature is accepted.
+
 This matrix distinguishes test implementation from final acceptance. [acceptance.json](acceptance.json) is the overall gate record; only evidence at the final exact companion set can satisfy an integrated gate.
 
 | Requirement family | Owning implementation and validation | Current evidence boundary |

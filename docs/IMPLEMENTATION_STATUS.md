@@ -2,7 +2,17 @@
 
 Status: implemented components under integration; the complete host/provider feature is not yet accepted.
 
-The repository was created privately under the assignment's fallback visibility rule. Work is on `feat/complete-map-visibility` above the initial `bootstrap` default branch. No merge, release, deployment, or service installation has been performed. Three disposable game launches terminated before any model decision or game action. Companion changes use isolated worktrees; unrelated shared changes remain preserved.
+Current delivery was reconciled on 2026-09-15 against `bootstrap` at
+`abc0249d1852faaefd59260d63058ec59e833353`. Product PR #2 and repairs #7/#9/#11/#13
+are merged, as are the original protocol, game-mod, gateway, MCP and harness companion PRs.
+Observability #12 was closed without merge because its deployment-owned requirements already
+exist in the pinned replacement document. See the [complete acceptance ledger](ACCEPTANCE_LEDGER.md)
+for exact merge identities, all section 18 criteria, gates A–G and bounded remaining owner tasks.
+
+The evidence below is historical and retains its exact tested source pins. Three disposable
+game launches terminated before any model decision or game action. This reconciliation ran no
+game/provider, deployment, service installation or release. It does not establish the current
+availability of the historical host or its Steam client.
 
 ## Product evidence
 
@@ -10,9 +20,17 @@ The Rust product implements strict bundle validation, deterministic SVG/PNG rend
 
 The dense harness fixture at `67e3c241912bf687695bdd9cf547ca53335e5b3c` contains 76 nodes and 182 edges (the earlier `3c4470f` fixture is superseded by the runtime-map-v1 schema-digest alignment described under Companion integration). Clean source commit `5b1d196480685a313bc2417d5b4450a63cc89ce5` was built and packaged natively on Linux and Windows. Both binaries passed local-prefix and independent home-path scans in UTF-8 and UTF-16. The earlier `0fb4670` archives contained embedded local build paths and are superseded. Both new archives were extracted, checksum-verified, and used to run `doctor`, reproduce the offline demo, and validate it. Independent [packaging review](evidence/release-privacy-review.md) repeated archive scans and native smoke tests and confirmed the old archive fails the same privacy scan. All ten generated files were byte-identical across platforms, including PNG, SVG, and browser assets; see [native comparison](evidence/native-demo-comparison.json) and [packaging evidence](evidence/native-packaging.json).
 
-The updated source passed all 31 Linux and 29 Windows Rust tests, formatting, and Clippy. Unix-only path/symlink tests explain the platform count difference. Dependency advisories/licenses/sources passed after the keyed telemetry repair. Browser commit `04d6d00` passed all 18 desktop/mobile tests with fresh actual-CLI bundles; missing generated inputs fail CI. Hosted CI [34092979262](https://github.com/AI-Ascension/ascension-map-visualizer/actions/runs/34092979262) passed all five jobs at `5b1d196`, including native packaging, all 31/29 Rust tests, and all 18 browser tests. The subsequent documentation commit `c29d8a8b6599ba1eca847f2ef23135edbb32c394` also passed all five hosted jobs in [34132236336](https://github.com/AI-Ascension/ascension-map-visualizer/actions/runs/34132236336). Product PR [#2](https://github.com/AI-Ascension/ascension-map-visualizer/pull/2) remains a draft.
+The updated source passed all 31 Linux and 29 Windows Rust tests, formatting, and Clippy. Unix-only path/symlink tests explain the platform count difference. Dependency advisories/licenses/sources passed after the keyed telemetry repair. Browser commit `04d6d00` passed all 18 desktop/mobile tests with fresh actual-CLI bundles; missing generated inputs fail CI. Hosted CI [34092979262](https://github.com/AI-Ascension/ascension-map-visualizer/actions/runs/34092979262) passed all five jobs at `5b1d196`, including native packaging, all 31/29 Rust tests, and all 18 browser tests. The subsequent documentation commit `c29d8a8b6599ba1eca847f2ef23135edbb32c394` also passed all five hosted jobs in [34132236336](https://github.com/AI-Ascension/ascension-map-visualizer/actions/runs/34132236336). Product PR [#2](https://github.com/AI-Ascension/ascension-map-visualizer/pull/2) is now merged; those test pins remain historical.
 
 ## Companion integration
+
+The original PR publication and host-attempt narrative in this section is historical.
+All PRs called drafts below have since merged except observability #12, whose closure and
+verified replacement are recorded in the acceptance ledger. The frozen package pin below
+is distinct from the current copied protocol pin `0bc689eabc5542ede2b09b030d9ea32daa8a73e7`
+recorded by [ASSEMBLY_MANIFEST.json](ASSEMBLY_MANIFEST.json) after visualizer #9.
+Game-mod #56 is closed following merged #75; the separate prepared-host/native/provider
+acceptance remains [Map#14](https://github.com/AI-Ascension/ascension-map-visualizer/issues/14).
 
 The accepted neutral protocol dependency is pinned to `0bc689eabc5542ede2b09b030d9ea32daa8a73e7`, matching the harness producer pin (`runtime-map-v1` schema digest `ceab0d2d`). All copied harness contracts and fixtures are sourced from harness revision `67e3c241912bf687695bdd9cf547ca53335e5b3c` and machine-checked by `tools/contracts.mjs` and `tools/verify-harness-provenance.mjs`. This refreshes fixtures whose manifest previously declared the superseded `6340f3cb` digest, which the product's `bundle.rs` would have rejected against current harness-produced bundles.
 
@@ -29,6 +47,9 @@ The campaign acceptance guard permits at most two model decisions, requires sett
 The documentation-only observability companion is [PR #12](https://github.com/AI-Ascension/ai-agent-observability/pull/12) at `67f455c0d4aa142139b3942ed0ad56138eecbf8b`. Shell syntax, ShellCheck, fixture/bootstrap tests, native Windows Compose configuration and invariant checks passed. Hosted CI also passed its deployment-contract and Dockerfile validation gate. No Collector service was started and no backend ingestion is claimed.
 
 ## Orchestration evidence
+
+This is the original client's historical record. The current task has not rerun its nesting
+preflight or demonstrated three descendant layers. Remaining task R1 is in the acceptance ledger.
 
 Installed client `0.153.4` accepted explicit `gpt-5.6-luna` / `max` settings for eight original descendants, four resumed tasks and two Steam issue/triage tasks. Independent runtime metadata confirmed that pair for all fourteen, each directly under the root at depth one. The original agents were absent from the native registry before resumed tasks were assigned. The root remained `gpt-6-astra`. The peak of eight descendants stayed below the project ceiling of twelve.
 
