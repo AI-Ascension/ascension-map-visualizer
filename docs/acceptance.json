@@ -2,6 +2,29 @@
   "schema": "ascension-map-acceptance-v1",
   "assignment": "prompts/ASCENSION_MAP_VISUALIZER_ORCHESTRATION_PROMPT.md",
   "complete": false,
+  "reconciled_on": "2026-09-15",
+  "criterion_ledger": "docs/ACCEPTANCE_LEDGER.md",
+  "evidence_scope": "Current delivery metadata plus preserved historical component evidence; no new native/provider or independent-review acceptance.",
+  "section_18_criteria": [
+    {"id": "D01", "status": "historical_component_evidence", "follow_up": ["R3"]},
+    {"id": "D02", "status": "incomplete", "follow_up": ["R1"]},
+    {"id": "D03", "status": "native_unverified", "follow_up": ["Map#14"]},
+    {"id": "D04", "status": "historical_component_evidence", "follow_up": ["R3", "Map#14"]},
+    {"id": "D05", "status": "historical_component_evidence", "follow_up": ["R2", "R3"]},
+    {"id": "D06", "status": "synthetic_only", "follow_up": ["Map#14"]},
+    {"id": "D07", "status": "historical_component_evidence", "follow_up": ["R3"]},
+    {"id": "D08", "status": "historical_component_evidence", "follow_up": ["R3"]},
+    {"id": "D09", "status": "independent_review_incomplete", "follow_up": ["R2", "R3"]},
+    {"id": "D10", "status": "incomplete", "follow_up": ["R2", "R3", "Map#14"]},
+    {"id": "D11", "status": "delivery_metadata_reconciled", "follow_up": ["R3"]}
+  ],
+  "follow_up_owner": "https://github.com/AI-Ascension/ascension-map-visualizer/issues/1",
+  "follow_up_tasks": {
+    "R1": "Visualiser orchestration owner: current preflight and genuine useful three-layer Luna/max ancestry evidence.",
+    "R2": "Harness owner and independent reviewer: source-time replay retention/non-dispatchability review, repairs and regressions at exact pins.",
+    "R3": "Visualizer integration owner and runtime peers: coherent current synthetic/legacy/refusal, evaluation, viewer, packaging and reconnect qualification.",
+    "Map#14": "https://github.com/AI-Ascension/ascension-map-visualizer/issues/14"
+  },
   "gates": [
     {
       "id": "A",
@@ -71,7 +94,7 @@
     {
       "requirement": "three genuine descendant layers",
       "status": "blocked",
-      "reason": "Original and resumed Luna child tool surfaces have no delegation operation; observed descendants are all depth one."
+      "reason": "Historical original/resumed child tool surfaces lacked delegation; recorded descendants are depth one. Current capability and required ancestry remain unverified under R1."
     }
   ],
   "live_status": {
@@ -81,8 +104,11 @@
     "game_or_provider_launched": true,
     "host_bootstrap_attempts": 3,
     "first_attempt": "host exited before readiness because Steam was unavailable; zero provider calls and actions; cleanup baseline preserved",
-    "current_attempt": "No attempt running. Third attempt failed on first MCP observation request; cleanup and protected-data checks passed. Fourth launch withheld because Steam client is unavailable.",
+    "current_attempt": "No new attempt in this audit. Historical third attempt failed on first MCP observation; cleanup passed. The fourth was withheld for Steam availability. Current host readiness is unverified.",
     "steam_startup_issue": "https://github.com/AI-Ascension/sts2-game-mod/issues/56",
+    "steam_startup_issue_state": "closed",
+    "steam_startup_merge_commit": "8c4adc8f7475c45774dbd621164655fa5173a6a3",
+    "remaining_native_gate": "https://github.com/AI-Ascension/ascension-map-visualizer/issues/14",
     "evidence": "docs/evidence/live-attempts.json"
   },
   "component_evidence": {

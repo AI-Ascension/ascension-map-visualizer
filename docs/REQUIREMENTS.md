@@ -1,5 +1,11 @@
 # Requirement-to-test matrix
 
+Current delivery and the exhaustive original section 18 / gate A–G mapping are in
+[ACCEPTANCE_LEDGER.md](ACCEPTANCE_LEDGER.md). That ledger also names bounded owner tasks
+R1–R3 and separates closed game-mod #56 from the still-open native/provider Map#14 gate.
+The component matrix below preserves historical test pins and counts; it does not claim
+that those checks were rerun against current default branches or that the feature is accepted.
+
 This matrix distinguishes test implementation from final acceptance. [acceptance.json](acceptance.json) is the overall gate record; only evidence at the final exact companion set can satisfy an integrated gate.
 
 | Requirement family | Owning implementation and validation | Current evidence boundary |
@@ -10,7 +16,7 @@ This matrix distinguishes test implementation from final acceptance. [acceptance
 | Deterministic analysis and valid bounded candidates | Harness map analysis tests and non-authoring exhaustive oracle | Independent nine-test oracle passed; repaired four-mode evaluation uses measured synthetic tasks and actual renderer PNG; final workspace assembly passed at `c457455`; live behavior remains unverified |
 | Exact graph/image presentation | Product `rendering`, `bundle_integration`, `cli`; manual PNG inspection | Validated small 4-node/4-edge and dense 76-node/182-edge fixtures; ten generated demo files match across native Linux and Windows at `5b1d196` |
 | Browser read-only interaction | Playwright `tests/browser`, actual generated payload integration | All 18 desktop/mobile tests passed with fresh CLI-generated small/dense bundles; missing inputs fail CI |
-| Provider graph/image serialization and legal dispatch | Harness episode, Exo, Astra bridge capture; actual MCP process and visualizer executable | Actual bridge CLI capture preserves the full 76-node/182-edge graph and matching image bytes with a fake provider; final synthetic capture passed at `c457455`; real provider delivery and host settlement remain unverified |
+| Provider graph/image serialization and legal dispatch | Harness episode, Exo, Astra bridge capture; actual MCP process and visualizer executable | Actual bridge CLI capture at `423d905` preserves the full 76-node/182-edge graph and matching image bytes with a fake provider; the separate four-mode synthetic evaluation passed at harness assembly `c457455`; real provider delivery and host settlement remain unverified |
 | Atomic cache/replay and source-time knowledge | Harness bundle-store/cache tests; product `publication`, `feed`, `cli` | Product corruption/lineage/restart tests passed; harness transaction-lock and finite-storage repair passed six concurrency/capacity/collision regressions; final workspace assembly passed at `c457455`; live behavior remains unverified |
 | Packaging and security | Native Linux/Windows Rust suites; `cargo deny`; `actionlint`; `zizmor`; dependency notice collection | Native Linux/Windows tests, packages, extracted CLI smoke tests, private-path scans, and all hosted checks passed at `5b1d196`; independent distribution review repeated scans/smokes and closed findings |
 | Optional bounded observability | Product actual OTLP request/outage tests; observability policy/compose checks | Exporter synthetic capture/outage tests passed; existing collector deployment and end-to-end trace ingestion not claimed |
