@@ -1,0 +1,143 @@
+{
+  "schema": "ascension-map-live-lane-pin-matrix-v1",
+  "recorded_on": "2026-09-17",
+  "issue": "https://github.com/AI-Ascension/ascension-map-visualizer/issues/14",
+  "lane": "--campaign-map",
+  "status": "source_derived_record",
+  "live_verified": false,
+  "compatible_tuple_exists": false,
+  "method": "git fetch origin, then git show/git grep against the listed commits; no host, Steam, gateway, MCP, harness or provider process started",
+  "heads": {
+    "sts2-protocol": {
+      "branch": "main",
+      "commit": "bfe28e455de48d6d9db466bbcf6062ab5d85e9af",
+      "runtime_map_v1_schema_sha256": "ceab0d2dfc471d1ec36d12edaf4654b8c7fdced06548bf47265e11c63f98115b",
+      "schema_paths": ["schemas/runtime-map-v1.schema.json", "artifacts/runtime-map-v1/schema.json"],
+      "schema_unchanged_since_assembly_manifest_pin": true
+    },
+    "sts2-gateway": {
+      "branch": "main",
+      "commit": "804691c5e1b3121075d83b3e31b86606facb5e62",
+      "runtime_binary": "sts2-gateway-runtime",
+      "binary_source": "crates/gateway/src/bin/sts2-gateway-runtime.rs"
+    },
+    "sts2-mcp-server": {
+      "branch": "main",
+      "commit": "65cb405616ecddfb7bf7b76edf341be30a442ca2",
+      "runtime_binary": "sts2-mcp-server",
+      "binary_source": "crates/mcp-server/src/bin/sts2-mcp-server.rs"
+    },
+    "sts2-harness": {
+      "branch": "main",
+      "commit": "41c2d1171beed7b521dced79b9bf66ce75d7f196",
+      "verification_report_commit": "f6736580",
+      "commits_since_verification": ["deb5df6d", "41c2d117"],
+      "runtime_binaries": ["sts2-harness-runtime", "sts2-astra-bridge"],
+      "contract_copies_at_67e3c241_identical_to_head": true
+    },
+    "sts2-game-mod": {
+      "branch": "main",
+      "commit": "655d3954c8049978df2b6505d62c9619f3bdca86",
+      "verification_report_commit": "46b1ac6e",
+      "commits_since_verification": ["857baf1", "655d395"],
+      "launcher": "experiments/managed-rust-interop/live-combat-session.sh",
+      "runbook": "docs/LIVE_COMBAT_DEMO.md",
+      "launcher_and_runbook_last_changed": "da89456163e0a57d705b2099c2f8ff3d4fce5bb7",
+      "runbook_identical_to_issue_link_c947a930": true
+    },
+    "ascension-map-visualizer": {
+      "branch": "bootstrap",
+      "commit": "3370db162be8a0618da1c846327be3facf86dd2b",
+      "binary": "map-visualizer",
+      "build_command": "node tools/build-release.mjs",
+      "platform": "linux-x86_64",
+      "sha256": "554cf5b9c8e74d8b9154f3ee9c3fb25e1ee91b4365e6b67ea817235f4334b679",
+      "digest_reproducibility": "unverified"
+    },
+    "bridge_revision": {
+      "variable": "STS2_EXO_REVISION",
+      "derivation": "sha256sum of --provider-binary at launch (live-combat-session.sh:324-325); recorded in the run manifest (:357)",
+      "current_head_value": "unverified",
+      "historical_value": "d608c0290ce3f2b59b1c0be8a5e78c122f31cdede99626d5680e761ba66bbcd9",
+      "historical_source_commit": "423d9052c8780173e640fa5991e88e8bae282f47"
+    },
+    "host": {
+      "product": "Slay the Spire 2",
+      "version": "0.107.1",
+      "release": "59260271",
+      "sts2_dll_sha256": "a1f9e653f1e28e4076558fee1e60d218619cb7e057b887c6417f62c62c6d7a52",
+      "godotsharp_dll_sha256": "0e4897ecdfb31456a97c7d8028dfb8d7dbdc632e2f73fc9b438d7b266a139289",
+      "enforced_at": "live-combat-session.sh:14-15",
+      "availability": "unverified"
+    }
+  },
+  "env_contract_mismatch": {
+    "launcher_commit": "655d3954c8049978df2b6505d62c9619f3bdca86",
+    "launcher_file": "experiments/managed-rust-interop/live-combat-session.sh",
+    "harness_commit": "41c2d1171beed7b521dced79b9bf66ce75d7f196",
+    "launcher_exports_unread_by_harness": [
+      {"name": "STS2_CAMPAIGN_MAP_BOUND", "value": "true", "launcher_line": 343, "harness_hits": 0},
+      {"name": "STS2_MAP_MODE", "value": "graph-image", "launcher_line": 344, "harness_hits": 0},
+      {"name": "STS2_MAP_ARTIFACT_ROOT", "value": "$run/map-artifacts", "launcher_line": 342, "harness_hits": 0}
+    ],
+    "launcher_exports_read_only_by_evaluation_tool": [
+      {"name": "STS2_MAP_RENDERER_BINARY", "launcher_line": 344, "harness_reader": "crates/harness/src/map/evaluation_renderer.rs:39", "caller": "crates/harness/src/map/evaluation_matrix.rs:92", "live_runtime_reads": false},
+      {"name": "STS2_MAP_RENDERER_SHA256", "launcher_line": 345, "harness_reader": "crates/harness/src/map/evaluation_renderer.rs:42", "caller": "crates/harness/src/map/evaluation_matrix.rs:92", "live_runtime_reads": false}
+    ],
+    "harness_reads_never_set_by_launcher": [
+      {"name": "STS2_ENABLE_MAP_CONTEXT", "harness_reader": "crates/harness/src/bin/runtime_support/config.rs:92", "default": "false", "gate": "crates/harness/src/episode/runner_steps.rs:207-208", "launcher_hits": 0},
+      {"name": "STS2_EXO_MAX_REQUEST_BYTES", "harness_reader": "crates/harness/src/bin/runtime_support/runtime_v3_settings.rs:137", "required_value_when_map_enabled": "393443", "launcher_hits": 0}
+    ],
+    "live_runtime_image_rendering_at_harness_head": false,
+    "runbook_intent_line": "docs/LIVE_COMBAT_DEMO.md:126",
+    "effect_at_current_heads": "sts2-harness-runtime starts with map context disabled and no bound action policy; the launcher trace verifier (live-combat-session.sh:253-260, live-campaign-trace.jq) still expects image, bundle and map-action records",
+    "bound_policy_reader_origin": {
+      "commit": "c4574555bf383014479b5651b59e0f90c0a40715",
+      "date": "2026-09-07",
+      "files": [
+        "crates/harness/src/bin/runtime_support/runtime_v3_campaign.rs:28,31,37",
+        "crates/harness/src/bin/runtime_support/runtime_v3_settings.rs:61,66",
+        "crates/harness/src/bin/runtime_support/runtime_v3_episode_map.rs:210-226",
+        "docs/map-campaign-validation.md:3,5,26"
+      ],
+      "ancestor_of_harness_main": false,
+      "ancestor_of_pr35_head_51a7d89a": false,
+      "in_pr35_commits": false,
+      "on_remote_branch": false,
+      "reads_STS2_ENABLE_MAP_CONTEXT": false
+    }
+  },
+  "runbook_command_block": {
+    "source": "sts2-game-mod@655d3954 docs/LIVE_COMBAT_DEMO.md",
+    "fields": [
+      {"flag": "--host-dir", "runbook_value": "/path/to/disposable-sts2", "pin": "disposable STS2 0.107.1/59260271 copy; sts2.dll a1f9e653...; GodotSharp.dll 0e4897ec...", "label": "source-derived; host unverified"},
+      {"flag": "--user-dir", "runbook_value": "C:\\Temp\\sts2-map-user-20260907", "pin": "operator absolute Windows path outside host/repo/addon/artifacts", "label": "operator input"},
+      {"flag": "--addon-dir", "runbook_value": "/path/to/disposable-sts2/mods", "pin": "three addon files staged from sts2-game-mod@655d3954; hashes to addon.sha256 at run time", "label": "unverified"},
+      {"flag": "--artifacts-dir", "runbook_value": "/tmp/sts2-map-artifacts", "pin": "external run directory", "label": "operator input"},
+      {"flag": "--gateway-binary", "runbook_value": "/path/to/sts2-gateway-runtime", "pin": "sts2-gateway@804691c5", "historical_sha256": "2c4af20549d0e709dc4eccae443de4aec7605721d82047432192109f478176a5", "historical_commit": "4b306321f869f0dffb99110cc127dcdac731df4a", "label": "unverified"},
+      {"flag": "--mcp-binary", "runbook_value": "/path/to/sts2-mcp-server", "pin": "sts2-mcp-server@65cb4056", "historical_sha256": "edd408799080a368ce9fe053aeaa380ec2401aeb565b8fa9436bdc119285e1f9", "historical_commit": "0d2035a08cbab9210e89ee0c1adc560fcf47d327", "label": "unverified"},
+      {"flag": "--harness-binary", "runbook_value": "/path/to/sts2-harness-runtime", "pin": "sts2-harness@41c2d117 (see env_contract_mismatch)", "historical_sha256": "58d1fc0ee31e18a1aa9df3313cb75c363a3372104afd2ccc9531115d2c76999a", "historical_commit": "423d9052c8780173e640fa5991e88e8bae282f47", "label": "unverified"},
+      {"flag": "--provider-binary", "runbook_value": "/path/to/sts2-astra-bridge", "pin": "sts2-harness@41c2d117; sha256 becomes STS2_EXO_REVISION; provider kind openai-astra required", "historical_sha256": "d608c0290ce3f2b59b1c0be8a5e78c122f31cdede99626d5680e761ba66bbcd9", "historical_commit": "423d9052c8780173e640fa5991e88e8bae282f47", "label": "unverified"},
+      {"flag": "--map-renderer-binary", "runbook_value": "/path/to/map-visualizer", "pin": "ascension-map-visualizer@3370db16 release build", "sha256": "554cf5b9c8e74d8b9154f3ee9c3fb25e1ee91b4365e6b67ea817235f4334b679", "label": "source-derived (this machine); reproducibility unverified"},
+      {"flag": "--map-renderer-sha256", "runbook_value": "LOWERCASE_SHA256", "pin": "554cf5b9c8e74d8b9154f3ee9c3fb25e1ee91b4365e6b67ea817235f4334b679 for that exact file; launcher exits 2 on mismatch (:149-153)", "label": "source-derived"},
+      {"flag": "--powershell-binary", "runbook_value": "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe", "pin": "host PowerShell; runs live-combat-demo.ps1 -CampaignMapBound (:296)", "label": "host tool"},
+      {"flag": "--campaign-map", "runbook_value": "flag", "pin": "requires run-kind campaign, mode standard, no seed, no replay (:133-137,158-161)", "label": "source-derived"}
+    ]
+  },
+  "acceptance_criteria": [
+    {"id": "AC1", "status": "unverified", "note": "pins recorded; no compatible tuple until the owner decision is made", "gate": "owner decision (harness or game-mod)"},
+    {"id": "AC2", "status": "unverified", "gate": "Use the owner campaign/map runbook and the existing --campaign-map lane, with at most two model decisions under the owner's approved budget."},
+    {"id": "AC3", "status": "unverified", "gate": "Verify native permitted topology, including all in-scope nodes/edges and zero read side effects, through the real fenced transport."},
+    {"id": "AC4", "status": "unverified", "gate": "Capture sanitized evidence that the real provider receives the complete graph and matching image; distinguish delivery from model comprehension."},
+    {"id": "AC5", "status": "unverified", "gate": "Verify a current legal map action settles through existing host witnesses and is followed by fresh observation."},
+    {"id": "AC6", "status": "unverified", "gate": "Record cleanup/baseline restoration, exact commands, results, artifact digests, and independent review."}
+  ],
+  "open_owner_decision": {
+    "decided": false,
+    "options": [
+      {"owner": "sts2-harness", "change": "re-land readers for STS2_CAMPAIGN_MAP_BOUND, STS2_MAP_MODE, STS2_MAP_ARTIFACT_ROOT plus live image rendering and bundle/feed output as at c4574555; launcher unchanged"},
+      {"owner": "sts2-game-mod", "change": "export STS2_ENABLE_MAP_CONTEXT=true and STS2_EXO_MAX_REQUEST_BYTES=393443, drop or redefine the three unread names, revise LIVE_COMBAT_DEMO.md:126, manifest fields (:382-386) and verify_campaign_map_trace to harness-main behavior (graph only, no image, no bound policy)"}
+    ],
+    "precondition_for_host_handoff": "one option merged and its pins recorded"
+  }
+}
