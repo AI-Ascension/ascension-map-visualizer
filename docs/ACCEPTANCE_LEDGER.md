@@ -90,6 +90,8 @@ they are not requirements waived by merging the documentation for Map#15.
   sample sizes and uncertainty, independent review, and feature-off/mixed-version outcomes.
   Keep native/provider/backend evidence separate and preserve the original historical files.
 
+- **Map#14 AC1 preparation (2026-09-17)**: the [live-lane pin matrix](evidence/live-lane-pin-matrix-20260917.md) records the current protocol/gateway/MCP/harness/game-mod/visualizer heads and the launcher-vs-harness map env-contract mismatch (`STS2_CAMPAIGN_MAP_BOUND`/`STS2_MAP_MODE`/`STS2_MAP_ARTIFACT_ROOT` exported, only `STS2_ENABLE_MAP_CONTEXT` read); it chooses no side and verifies nothing live.
+
 The native/provider task remains Map#14. This ledger adds no host launch, provider spend,
 installation, deployment or release authorization. The old “Steam unavailable” and “no child
 delegation tool” statements describe their recorded attempts, not a current environment probe.
