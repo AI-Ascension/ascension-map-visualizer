@@ -1,70 +1,31 @@
 schema_version = 1
-profile_id = "rust-browser"
+profile_id = "planning-bootstrap"
 repository = "AI-Ascension/ascension-map-visualizer"
 owner = "ARCH"
 source_bundle = "AI-Ascension/.github"
-source_commit = "eed9921b5c5d5c41380655bded84f9e2d0aab599"
-source_digest = "sha256:01a44552f0f717723e4e3e7f4e15f9f3ff632c3550498b63c5bf808265831936"
+source_commit = "18484583f1de87eb3cd1f7c8b08c58c926083ad4"
+source_digest = "sha256:b4054d6c7472371fec0d2f9f23a2df33e750a1c533b560d9cd308fe78a09c18d"
 distribution = "local"
 scopes = [
-    "rust",
-    "javascript",
-    "json",
-    "contracts",
+    "markdown",
+    "configuration",
+    "rust-tooling",
 ]
 
 [checks]
 fast = [
     "git-diff-check",
     "standards-validate",
-    "cargo-metadata",
-    "cargo-fmt",
 ]
-required = [
-    "cargo-clippy",
-    "cargo-test",
-    "contracts-check",
-    "browser-check",
-    "dependency-advisories",
-]
-extended = [
-    "release-package",
-]
+required = ["bootstrap-sources"]
+extended = []
 
-[checks.commands.browser-check]
-command = "npm run test:browser"
-target = "."
-
-[checks.commands.cargo-clippy]
-command = "cargo clippy --workspace --all-targets --all-features --locked -- -D warnings"
-target = "."
-
-[checks.commands.cargo-fmt]
-command = "cargo fmt --all --check"
-target = "."
-
-[checks.commands.cargo-metadata]
-command = "cargo metadata --locked --no-deps --format-version 1"
-target = "."
-
-[checks.commands.cargo-test]
-command = "cargo test --workspace --all-targets --all-features --locked"
-target = "."
-
-[checks.commands.contracts-check]
-command = "node tools/contracts.mjs"
-target = "."
-
-[checks.commands.dependency-advisories]
-command = "cargo deny check"
+[checks.commands.bootstrap-sources]
+command = "cargo +1.97.1 run --locked --manifest-path standards/tools/standards-sync/Cargo.toml -- check-bootstrap --root ."
 target = "."
 
 [checks.commands.git-diff-check]
 command = "git diff --check"
-target = "."
-
-[checks.commands.release-package]
-command = "node tools/build-release.mjs"
 target = "."
 
 [checks.commands.standards-validate]
