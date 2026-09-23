@@ -74,8 +74,8 @@ fn replay_retains_source_time_and_rejects_partial_or_spliced_feed() {
             worker_source,
             Arc::new(Assets {
                 html: vec![],
-                script: vec![],
                 style: vec![],
+                scripts: vec![],
             }),
             worker_stop,
         )

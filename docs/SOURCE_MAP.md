@@ -15,7 +15,7 @@ Paths below are relative to their owner repository. They identify integration se
 | `ascension-map-visualizer` | `crates/map-visualizer/src/bundle.rs`, `contracts.rs`, `view.rs` | Consumer validation of exact artifacts and presentation adapter, without harness policy duplication |
 | `ascension-map-visualizer` | `crates/map-visualizer/src/drawing/`, `render_bundle.rs` | Original deterministic glyphs/layout, SVG/PNG rasterization, updated matching manifest |
 | `ascension-map-visualizer` | `source.rs`, `feed.rs`, `storage.rs`, `publication.rs`, `server.rs`, `http.rs` | Bounded root-confined acquisition, atomic publication, read-only loopback delivery |
-| `ascension-map-visualizer` | `web/`, `arguments.rs`, `cli.rs`, `demo.rs` | Human interaction, offline executable, embedded demo and explicit CLI grammar |
+| `ascension-map-visualizer` | `web/` (`index.html`, `viewer-core.js`, `viewer-validation.js`, `app.js`, `style.css`), `arguments.rs`, `cli.rs`, `demo.rs` | Human interaction, offline executable, embedded demo and explicit CLI grammar |
 | `ai-agent-observability` | `docs/MAP_ARTIFACTS.md` | Existing collector/artifact privacy and operating integration; no new stack |
 
 No game-core change is justified by this implementation: host facts, protocol validation, harness analysis, and visual presentation already have distinct owners. Baseline organization/game-core commits are still included in the assembly inventory.

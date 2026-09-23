@@ -38,6 +38,14 @@ impl Bundle {
                 ("overview.svg", &rendered.svg),
                 ("overview.png", &rendered.png),
                 ("index.html", include_bytes!("../../../web/index.html")),
+                (
+                    "viewer-core.js",
+                    include_bytes!("../../../web/viewer-core.js"),
+                ),
+                (
+                    "viewer-validation.js",
+                    include_bytes!("../../../web/viewer-validation.js"),
+                ),
                 ("app.js", include_bytes!("../../../web/app.js")),
                 ("style.css", include_bytes!("../../../web/style.css")),
             ],

@@ -125,8 +125,18 @@ fn serve(input: Input, port: u16, historical: bool) -> Result<(), Failure> {
             server_source,
             Arc::new(Assets {
                 html: include_bytes!("../../../web/index.html").to_vec(),
-                script: include_bytes!("../../../web/app.js").to_vec(),
                 style: include_bytes!("../../../web/style.css").to_vec(),
+                scripts: vec![
+                    (
+                        "/viewer-core.js",
+                        include_bytes!("../../../web/viewer-core.js").to_vec(),
+                    ),
+                    (
+                        "/viewer-validation.js",
+                        include_bytes!("../../../web/viewer-validation.js").to_vec(),
+                    ),
+                    ("/app.js", include_bytes!("../../../web/app.js").to_vec()),
+                ],
             }),
             server_stop,
         )

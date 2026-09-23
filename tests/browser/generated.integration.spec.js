@@ -186,7 +186,7 @@ test.describe('actual release CLI serve', () => {
     await page.screenshot({ path: screenshotPath('map-generated-dense-live'), fullPage: true });
 
     const bundleId = JSON.parse(fs.readFileSync(path.join(denseBundle, 'manifest.json'), 'utf8')).bundle_digest;
-    const allowedPaths = new Set(['/index.html', '/style.css', '/app.js', '/api/current', '/api/replay', `/api/frame/${bundleId}`]);
+    const allowedPaths = new Set(['/index.html', '/style.css', '/viewer-core.js', '/viewer-validation.js', '/app.js', '/api/current', '/api/replay', `/api/frame/${bundleId}`]);
     const httpPaths = observations.requests.filter((url) => /^https?:/u.test(url)).map((url) => new URL(url).pathname);
     expect(httpPaths.length).toBeGreaterThanOrEqual(3);
     expect(httpPaths.every((requestPath) => allowedPaths.has(requestPath))).toBeTruthy();

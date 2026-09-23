@@ -2,6 +2,20 @@
 
 The browser product is a small static, read-only surface in `web/`. It consumes the frozen `ascension-map-viewer-v1` presentation payload from `docs/VIEWER_PAYLOAD.md`; it does not infer permissions from graph adjacency and it has no game or provider credentials.
 
+## Source layout
+
+`web/` is split into cohesive classic-script modules that share one bounded public API. The entrypoint stays a classic script (not an ES module) so the offline `file://` path keeps working, where module scripts are blocked by the browser's cross-origin rules.
+
+| File | Responsibility |
+|---|---|
+| `web/index.html` | Static markup and the ordered `defer` script tags (`viewer-core.js`, `viewer-validation.js`, `app.js`) |
+| `web/viewer-core.js` | Bounded constants, shared mutable session state/refs, and DOM/SVG helpers |
+| `web/viewer-validation.js` | Bounded JSON parsing plus strict viewer-payload, checkpoint and replay validation |
+| `web/app.js` | Entrypoint: layout, rendering, interaction, replay/live loading and boot wiring; sets `window.__ASCENSION_MAP_VIEWER__` |
+| `web/style.css` | Presentation only |
+
+The modules hand off through `window.__ASCENSION_MAP_MODULES__` and must load in the order above. The Rust renderer embeds, serves and publishes exactly these browser assets (`render_bundle.rs`, `server.rs`, `publication.rs`, `cli.rs`), so any new browser source file must be added to that fixed asset set as well.
+
 ## Run it
 
 From this repository, serve the `web/` directory on loopback:

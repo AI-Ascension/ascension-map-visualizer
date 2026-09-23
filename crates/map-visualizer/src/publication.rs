@@ -90,6 +90,8 @@ fn allowed(name: &str) -> bool {
             | "overview.svg"
             | "overview.png"
             | "index.html"
+            | "viewer-core.js"
+            | "viewer-validation.js"
             | "app.js"
             | "style.css"
     )
