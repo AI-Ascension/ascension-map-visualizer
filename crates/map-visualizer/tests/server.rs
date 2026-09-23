@@ -34,8 +34,8 @@ fn actual_loopback_server_has_only_fixed_read_routes_and_origin_fences() {
             Arc::new(Source::new()),
             Arc::new(Assets {
                 html: b"offline".to_vec(),
-                script: b"/* owned */".to_vec(),
                 style: b"/* owned */".to_vec(),
+                scripts: vec![("/app.js", b"/* owned */".to_vec())],
             }),
             shutdown,
         )

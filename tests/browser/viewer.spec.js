@@ -60,7 +60,11 @@ test.describe('offline viewer', () => {
     await loadOffline(page, hostileFixture, '1 nodes · 0 edges');
     await expect(page.locator('.node-label')).toHaveText('<script>alert(1)</script>');
     await expect(page.locator('.empty-state')).toBeHidden();
-    await expect(page.locator('script')).toHaveCount(1);
+    // The viewer loads exactly its three static modules and hostile labels must not
+    // inject any additional (external or inline) script element.
+    expect(
+      await page.locator('script').evaluateAll((nodes) => nodes.map((node) => node.getAttribute('src')))
+    ).toEqual(['viewer-core.js', 'viewer-validation.js', 'app.js']);
     expect(dialogs).toBe(0);
   });
 

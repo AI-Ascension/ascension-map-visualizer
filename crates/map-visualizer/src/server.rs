@@ -15,8 +15,10 @@ pub use crate::source::Source;
 
 pub struct Assets {
     pub html: Vec<u8>,
-    pub script: Vec<u8>,
     pub style: Vec<u8>,
+    // Ordered (request path, body) pairs for the bounded classic-script set the
+    // viewer entrypoint loads. Paths are exact matches; no directory serving.
+    pub scripts: Vec<(&'static str, Vec<u8>)>,
 }
 
 pub struct Server {
@@ -110,9 +112,12 @@ fn handle(mut socket: TcpStream, port: u16, source: &Source, assets: &Assets) {
     };
     let static_asset = match request.path.as_str() {
         "/" | "/index.html" => Some(("text/html; charset=utf-8", assets.html.as_slice())),
-        "/app.js" => Some(("text/javascript; charset=utf-8", assets.script.as_slice())),
         "/style.css" => Some(("text/css; charset=utf-8", assets.style.as_slice())),
-        _ => None,
+        path => assets
+            .scripts
+            .iter()
+            .find(|(name, _)| *name == path)
+            .map(|(_, bytes)| ("text/javascript; charset=utf-8", bytes.as_slice())),
     };
     if let Some((kind, bytes)) = static_asset {
         let _ = http::respond(&mut socket, 200, kind, bytes, request.head);
