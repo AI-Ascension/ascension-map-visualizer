@@ -33,6 +33,13 @@ jobs:
       - run: cargo metadata --locked --no-deps --format-version 1
       - run: cargo fmt --all --check
       - run: cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
+      - name: Check documentation links
+        # The `VAR="..." cmd` inline form is POSIX shell, and this job runs a
+        # windows-2025 leg too, so the step is Linux-only exactly as the
+        # watchdog's own doc gate is. The Windows leg is covered by the
+        # packaging and native offline smoke steps below it.
+        if: runner.os == 'Linux'
+        run: RUSTDOCFLAGS="-D rustdoc::broken_intra_doc_links -D rustdoc::private_intra_doc_links -D rustdoc::redundant_explicit_links --document-private-items" cargo doc --workspace --no-deps --locked
       - run: cargo test --workspace --all-targets --all-features --locked
       - run: node tools/build-release.mjs
       - name: Native offline smoke test
