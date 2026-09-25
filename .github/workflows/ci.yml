@@ -40,8 +40,23 @@ jobs:
         # smoke step below, so the same gate runs on both legs instead of
         # skipping the one that compiles the `#[cfg(target_os = "windows")]`
         # code, which the Linux leg compiles out and never documents.
+        #
+        # A renamed or mistyped deny makes rustdoc emit `unknown lint` as a warning-only
+        # diagnostic and still exit 0, so cargo's status alone is not evidence that the
+        # lints this step names were accepted. Read the log for the counters as well.
         shell: bash
-        run: RUSTDOCFLAGS="-D rustdoc::broken_intra_doc_links -D rustdoc::private_intra_doc_links -D rustdoc::redundant_explicit_links --document-private-items" cargo doc --workspace --no-deps --locked
+        run: |
+          set -o pipefail
+          log=target/doc.log
+          mkdir -p target
+          status=0
+          RUSTDOCFLAGS="-D rustdoc::broken_intra_doc_links -D rustdoc::private_intra_doc_links -D rustdoc::redundant_explicit_links --document-private-items" \
+            cargo doc --workspace --no-deps --locked 2>&1 | tee "$log" || status=$?
+          errors=$(awk '/^error/{count++} END{print count+0}' "$log")
+          unknown=$(awk '/unknown lint/{count++} END{print count+0}' "$log")
+          warnings=$(awk '/^warning/{count++} END{print count+0}' "$log")
+          echo "doc: exit=$status errors=$errors warnings=$warnings unknown_lints=$unknown"
+          [ "$status" -eq 0 ] && [ "$errors" -eq 0 ] && [ "$warnings" -eq 0 ] && [ "$unknown" -eq 0 ]
       - name: Check unsupported-target documentation links
         # The two legs above compile the linux and windows arms of
         # `publication.rs::rename_new`, but neither compiles the third arm,
@@ -51,11 +66,23 @@ jobs:
         # the crate with `target_os = "macos"`, which is what makes the
         # fallback predicate true. Measured on rustdoc 1.97.1: a broken
         # intra-doc link in that body exits 0 on the host and 101 here.
+        #
+        # A renamed or mistyped deny is inert here too: rustdoc emits `unknown lint`
+        # as a warning-only diagnostic and still exits 0, so the log is read for counters.
         if: runner.os == 'Linux'
         run: |
           rustup target add --toolchain 1.97.1 x86_64-apple-darwin
+          set -o pipefail
+          log=target/darwin-doc.log
+          mkdir -p target
+          status=0
           RUSTDOCFLAGS="-D rustdoc::broken_intra_doc_links -D rustdoc::private_intra_doc_links -D rustdoc::redundant_explicit_links --document-private-items" \
-            cargo doc --workspace --no-deps --locked --target x86_64-apple-darwin
+            cargo doc --workspace --no-deps --locked --target x86_64-apple-darwin 2>&1 | tee "$log" || status=$?
+          errors=$(awk '/^error/{count++} END{print count+0}' "$log")
+          unknown=$(awk '/unknown lint/{count++} END{print count+0}' "$log")
+          warnings=$(awk '/^warning/{count++} END{print count+0}' "$log")
+          echo "darwin-doc: exit=$status errors=$errors warnings=$warnings unknown_lints=$unknown"
+          [ "$status" -eq 0 ] && [ "$errors" -eq 0 ] && [ "$warnings" -eq 0 ] && [ "$unknown" -eq 0 ]
       - run: cargo test --workspace --all-targets --all-features --locked
       - run: node tools/build-release.mjs
       - name: Native offline smoke test
