@@ -40,6 +40,19 @@ jobs:
         # packaging and native offline smoke steps below it.
         if: runner.os == 'Linux'
         run: RUSTDOCFLAGS="-D rustdoc::broken_intra_doc_links -D rustdoc::private_intra_doc_links -D rustdoc::redundant_explicit_links --document-private-items" cargo doc --workspace --no-deps --locked
+      - name: Check Windows-target documentation links
+        # `cargo doc` resolves the *host* target, so the step above never reads a
+        # `#[cfg(target_os = "windows")]` body — `publication.rs` has one, and a
+        # defect placed inside it is silent on the Ubuntu leg (measured: a
+        # `compile_error!` there gives this leg exit 0 and the targeted run exit
+        # 101). This is the same targeted pass `ascension-watchdog` uses for its
+        # cfg-split platform crate. Linux-only, like the step above: the inline
+        # `VAR="..." cmd` form is POSIX shell. No new runner is needed.
+        if: runner.os == 'Linux'
+        run: |
+          rustup target add --toolchain 1.97.1 x86_64-pc-windows-gnu
+          RUSTDOCFLAGS="-D rustdoc::broken_intra_doc_links -D rustdoc::private_intra_doc_links -D rustdoc::redundant_explicit_links --document-private-items" \
+            cargo doc --package map-visualizer --no-deps --locked --target x86_64-pc-windows-gnu
       - run: cargo test --workspace --all-targets --all-features --locked
       - run: node tools/build-release.mjs
       - name: Native offline smoke test
