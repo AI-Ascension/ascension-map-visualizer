@@ -42,6 +42,20 @@ jobs:
         # code, which the Linux leg compiles out and never documents.
         shell: bash
         run: RUSTDOCFLAGS="-D rustdoc::broken_intra_doc_links -D rustdoc::private_intra_doc_links -D rustdoc::redundant_explicit_links --document-private-items" cargo doc --workspace --no-deps --locked
+      - name: Check unsupported-target documentation links
+        # The two legs above compile the linux and windows arms of
+        # `publication.rs::rename_new`, but neither compiles the third arm,
+        # `#[cfg(not(any(target_os = "linux", target_os = "windows")))]`. A real
+        # cross-target run is the only way to reach it: `--cfg` cannot unset a
+        # built-in `target_os`, so this installs the darwin std and documents
+        # the crate with `target_os = "macos"`, which is what makes the
+        # fallback predicate true. Measured on rustdoc 1.97.1: a broken
+        # intra-doc link in that body exits 0 on the host and 101 here.
+        if: runner.os == 'Linux'
+        run: |
+          rustup target add --toolchain 1.97.1 x86_64-apple-darwin
+          RUSTDOCFLAGS="-D rustdoc::broken_intra_doc_links -D rustdoc::private_intra_doc_links -D rustdoc::redundant_explicit_links --document-private-items" \
+            cargo doc --workspace --no-deps --locked --target x86_64-apple-darwin
       - run: cargo test --workspace --all-targets --all-features --locked
       - run: node tools/build-release.mjs
       - name: Native offline smoke test
